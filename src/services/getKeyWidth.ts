@@ -12,7 +12,7 @@ interface GetKeyWidthDecorator {
   (startKey: number, endKey: number): GetKeyWidth,
 }
 
-const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 18 / 36
+const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 13 / 23
 
 const getKeyWidthDecorator: GetKeyWidthDecorator = (startKey, endKey): GetKeyWidth => (k) => {
   const dummyKeys = generateKeys(startKey, endKey)
@@ -40,7 +40,7 @@ const getKeyWidthDecorator: GetKeyWidthDecorator = (startKey, endKey): GetKeyWid
     )
   const octaveCount = getOctaveCount(startKey, endKey)
   const naturalKeyWidth = 100 * (octaveCount / fractionalOctaveCount) / (octaveCount * 7)
-  return isNaturalKey(k) ? naturalKeyWidth : naturalKeyWidth * ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO // naturalKeyWidth * 13.7 / 23.5}
+  return isNaturalKey(k) ? naturalKeyWidth : naturalKeyWidth * ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO
 }
 
 export default getKeyWidthDecorator

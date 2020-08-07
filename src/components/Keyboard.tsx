@@ -12,24 +12,34 @@ const Base = styled('div')({
 
 const Key = styled('div')({
   position: 'absolute',
-  border: '1px solid',
-  boxSizing: 'border-box',
   top: 0,
 })
 
-const NaturalKey = styled(Key)({
-  zIndex: 0,
-  backgroundColor: 'transparent',
+const DefaultNaturalKey = styled('div')({
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'white',
+  border: '1px solid',
+  boxSizing: 'border-box',
+  position: 'relative',
 })
 
-const AccidentalKey = styled(Key)({
-  zIndex: 2,
-  backgroundColor: 'currentColor',
+const DefaultAccidentalKey = styled('div')({
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'black',
+  border: '1px solid',
+  boxSizing: 'border-box',
+  position: 'relative',
 })
 
 const Highlight = styled('div')({
   width: '100%',
   height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  opacity: 0.75,
 })
 
 export const propTypes = {
@@ -83,6 +93,10 @@ const Keyboard: React.FC<Props> = ({
   keyChannels = [],
   channelColors = DEFAULT_CHANNEL_COLORS,
   width = '100%',
+  keyComponents: {
+    natural: NaturalKey = DefaultNaturalKey,
+    accidental: AccidentalKey = DefaultAccidentalKey,
+  } = {},
   height = 64,
 }) => {
   const [keys, setKeys, ] = React.useState<number[]>([])
@@ -96,6 +110,8 @@ const Keyboard: React.FC<Props> = ({
       style={{
         width: width!,
         height: height!,
+        backgroundColor: 'black',
+        overflow: 'hidden',
       }}
     >
       {keys.map(k => {
@@ -111,25 +127,28 @@ const Keyboard: React.FC<Props> = ({
         )
 
         return (
-          <Component
+          <Key
             style={{
+              zIndex: isNatural ? 0 : 2,
               width: width + '%',
               height: height + '%',
               left: left + '%',
             }}
           >
-            {
-              Array.isArray(currentKeyChannels)
-              && currentKeyChannels.map(c => (
-                <Highlight
-                  key={c!.channel}
-                  style={{
-                    backgroundColor: channelColors![c!.channel] as string,
-                  }}
-                />
-              ))
-            }
-          </Component>
+            <Component>
+              {
+                Array.isArray(currentKeyChannels)
+                && currentKeyChannels.map(c => (
+                  <Highlight
+                    key={c!.channel}
+                    style={{
+                      backgroundColor: channelColors![c!.channel] as string,
+                    }}
+                  />
+                ))
+              }
+            </Component>
+          </Key>
         )
       })}
     </Base>

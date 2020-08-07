@@ -48,8 +48,8 @@ const Base = styled('div')({
   width: '100%',
   height: '100%',
   position: 'relative',
-  '--natural-key-color': '#eee',
-  '--accidental-key-color': '#333',
+  '--natural-key-color': '#e3e3e5',
+  '--accidental-key-color': '#35313b',
 })
 
 const N1 = styled('div')`width: 100%; height: 100%; position: relative;`
@@ -206,6 +206,8 @@ const N18 = styled('div')`
   position: relative;
   width: 100%;
   height: 100%;
+  border-radius: 0 0 1px 1px;
+  overflow: hidden;
 `
 
 const B1 = styled('div')`
@@ -300,7 +302,7 @@ width: 100%;
 const B12 = styled('div')`
 width: 100%;
         height: 100%;
-        padding: 3px 3px 7px 3px;
+        padding: 3px 3px 7px 2px;
         box-sizing: border-box;
         position: absolute;
         top: 0;

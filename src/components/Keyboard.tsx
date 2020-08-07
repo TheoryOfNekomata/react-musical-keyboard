@@ -97,7 +97,7 @@ const Keyboard: React.FC<Props> = ({
     natural: NaturalKey = DefaultNaturalKey,
     accidental: AccidentalKey = DefaultAccidentalKey,
   } = {},
-  height = 64,
+  height = 80,
 }) => {
   const [keys, setKeys, ] = React.useState<number[]>([])
 

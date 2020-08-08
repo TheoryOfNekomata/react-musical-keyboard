@@ -106,3 +106,41 @@ export const Styled = (props?: Partial<Props>) => (
     />
   </Wrapper>
 )
+
+export const AnotherStyled = (props?: Partial<Props>) => (
+  <div
+    style={{
+      // @ts-ignore
+      '--size-scale-factor': 2,
+    }}
+  >
+    <Wrapper>
+      <Keyboard
+        {...props}
+        startKey={21}
+        endKey={108}
+        keyChannels={[
+          {
+            channel: 0,
+            key: 60,
+            velocity: 1,
+          },
+          {
+            channel: 0,
+            key: 63,
+            velocity: 1,
+          },
+          {
+            channel: 0,
+            key: 67,
+            velocity: 1,
+          },
+        ]}
+        keyComponents={{
+          natural: StyledNaturalKey,
+          accidental: StyledAccidentalKey,
+        }}
+      />
+    </Wrapper>
+  </div>
+)

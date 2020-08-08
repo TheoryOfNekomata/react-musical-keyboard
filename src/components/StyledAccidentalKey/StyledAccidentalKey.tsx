@@ -104,7 +104,7 @@ const B12 = styled('div')({
   width: '100%',
   height: '100%',
   padding:
-    'calc(3px * var(--size-scale-factor, 1)) calc(3px * var(--size-scale-factor, 1)) calc(7px * var(--size-scale-factor, 1)) calc(2px * var(--size-scale-factor, 1))',
+    'calc(3px * var(--size-scale-factor, 1)) calc(3px * var(--size-scale-factor, 1)) calc(7px * var(--size-scale-factor, 1)) calc(3px * var(--size-scale-factor, 1))',
   boxSizing: 'border-box',
   position: 'absolute',
   top: 0,
@@ -123,7 +123,7 @@ const B14 = styled('div')({
   width: '100%',
   height: 'calc(6px * var(--size-scale-factor, 1))',
   padding:
-    '0 calc(1px * var(--size-scale-factor, 1)) calc(5px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1))',
+    '0 calc(1px * var(--size-scale-factor, 1)) calc(5px * var(--size-scale-factor, 1)) calc(2px * var(--size-scale-factor, 1))',
   boxSizing: 'border-box',
   position: 'absolute',
   bottom: 0,

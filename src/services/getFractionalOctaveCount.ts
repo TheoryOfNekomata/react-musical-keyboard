@@ -2,8 +2,9 @@ import mem from 'mem'
 import generateKeys from './generateKeys'
 import groupKeysIntoOctaves from './groupKeysIntoOctaves'
 import getOctaveCompletenessUnmemoized from './getOctaveCompleteness'
+import * as caches from './caches'
 
-const getOctaveCompleteness = mem(getOctaveCompletenessUnmemoized)
+const getOctaveCompleteness = mem(getOctaveCompletenessUnmemoized, { cache: caches.getOctaveCompleteness })
 
 interface GetFractionalOctaveCount {
   (startKey: number, endKey: number): number

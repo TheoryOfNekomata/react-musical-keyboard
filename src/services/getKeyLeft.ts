@@ -3,11 +3,12 @@ import getKeyXOffsetUnmemoized from './getKeyXOffset'
 import getOctaveCountUnmemoized from './getOctaveCount'
 import getFractionalOctaveCountUnmemoized from './getFractionalOctaveCount'
 import getKeyOctaveUnmemoized from './getKeyOctave'
+import * as caches from './caches'
 
-const getKeyXOffset = mem(getKeyXOffsetUnmemoized)
+const getKeyXOffset = mem(getKeyXOffsetUnmemoized, { cache: caches.getKeyXOffset })
 const getOctaveCount = mem(getOctaveCountUnmemoized, { cacheKey: (args) => args.join(':') })
 const getFractionalOctaveCount = mem(getFractionalOctaveCountUnmemoized, { cacheKey: (args) => args.join(':') })
-const getKeyOctave = mem(getKeyOctaveUnmemoized)
+const getKeyOctave = mem(getKeyOctaveUnmemoized, { cache: caches.getKeyOctave })
 
 export interface GetKeyLeft {
   (k: number): number

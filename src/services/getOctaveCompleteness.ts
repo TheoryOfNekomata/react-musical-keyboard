@@ -1,9 +1,10 @@
 import mem from 'mem'
+import * as caches from './caches'
 import getKeyXOffsetUnmemoized from './getKeyXOffset'
 import isNaturalKeyUnmemoized from './isNaturalKey'
 
-const getKeyXOffset = mem(getKeyXOffsetUnmemoized)
-const isNaturalKey = mem(isNaturalKeyUnmemoized)
+const getKeyXOffset = mem(getKeyXOffsetUnmemoized, { cache: caches.getKeyXOffset })
+const isNaturalKey = mem(isNaturalKeyUnmemoized, { cache: caches.isNaturalKey })
 
 interface GetOctaveCompleteness {
   (firstKey: number, lastKey: number): number

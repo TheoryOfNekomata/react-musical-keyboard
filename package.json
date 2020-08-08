@@ -21,8 +21,7 @@
   },
   "dependencies": {
     "mem": "^6.1.0",
-    "styled-components": "^5.1.1",
-    "typescript-memoize": "^1.0.0-alpha.3"
+    "styled-components": "^5.1.1"
   },
   "peerDependencies": {
     "react": ">=16"

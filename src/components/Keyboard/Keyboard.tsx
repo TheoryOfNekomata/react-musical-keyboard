@@ -107,6 +107,7 @@ const Keyboard: React.FC<Props> = ({
         width: width!,
         height: height!,
       }}
+      role="presentation"
     >
       {keys.map((k) => {
         const isNatural = isNaturalKey(k)

@@ -4,15 +4,10 @@ import StyledAccidentalKey from '../StyledAccidentalKey/StyledAccidentalKey'
 import StyledNaturalKey from '../StyledNaturalKey/StyledNaturalKey'
 import Keyboard, { propTypes } from './Keyboard'
 
-interface WrapperProps {
-  style?: object | null
-}
-
-const Wrapper: React.FC<WrapperProps> = ({ style, ...etcProps }) => (
+const Wrapper: React.FC = (props) => (
   <div
-    {...etcProps}
+    {...props}
     style={{
-      ...style,
       // @ts-ignore
       '--color-channel-0': '#f55',
       '--color-channel-1': '#ff0',
@@ -82,13 +77,7 @@ export const WithDifferentKeyRange = (props?: Partial<Props>) => (
 )
 
 export const Styled = (props?: Partial<Props>) => (
-  <Wrapper
-    style={{
-      // @ts-ignore
-      '--color-natural-key': '#e3e3e5',
-      '--color-accidental-key': '#35313b',
-    }}
-  >
+  <Wrapper>
     <Keyboard
       {...props}
       startKey={21}

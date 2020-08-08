@@ -37,7 +37,7 @@ const N3 = styled('div')`
 const N4 = styled('div')`
   width: 100%;
   height: 100%;
-  background-color: var(--color-natural-key, transparent);
+  background-color: var(--color-natural-key, #e3e3e5);
   border-radius: 0 0 1px 1px;
 `
 

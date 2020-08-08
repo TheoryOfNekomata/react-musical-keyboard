@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import keyPropTypes from '../../services/keyPropTypes'
 import styled from 'styled-components'
+import keyPropTypes from '../../services/keyPropTypes'
 
 const Base = styled('div')({
   width: '100%',

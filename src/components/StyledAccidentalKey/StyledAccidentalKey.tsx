@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import keyPropTypes from '../../services/keyPropTypes'
 import styled from 'styled-components'
+import keyPropTypes from '../../services/keyPropTypes'
 
 const Base = styled('div')({
   width: '100%',
@@ -20,13 +20,13 @@ const B2 = styled('div')`
   width: 100%;
   height: 100%;
   border-radius: 0 0 1px 1px;
-  background-color: var(--color-accidental-key, currentColor);
+  background-color: var(--color-accidental-key, #35313b);
   mask-image: linear-gradient(to bottom, white, rgba(0, 0, 0, 0.9));
 `
 const B3 = styled('div')`
   width: 100%;
   height: 100%;
-  background-color: var(--color-accidental-key, currentColor);
+  background-color: var(--color-accidental-key, #35313b);
 `
 const B4 = styled('div')`
   width: 100%;

@@ -1,15 +1,15 @@
 import * as React from 'react'
 import * as ReactIs from 'react-is'
-import AccidentalKey from './StyledAccidentalKey'
+import StyledAccidentalKey from './StyledAccidentalKey'
 
 it('should exist', () => {
-  expect(AccidentalKey).toBeDefined()
+  expect(StyledAccidentalKey).toBeDefined()
 })
 
 it('should be a React component', () => {
-  expect(ReactIs.isValidElementType(AccidentalKey)).toBe(true)
+  expect(ReactIs.isValidElementType(StyledAccidentalKey)).toBe(true)
 })
 
 it('should render without crashing', () => {
-  expect(() => <AccidentalKey />).not.toThrow()
+  expect(() => <StyledAccidentalKey />).not.toThrow()
 })

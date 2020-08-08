@@ -1,4 +1,8 @@
-export default (dummyKeys: number[]): Record<number, number[]> =>
+interface GroupKeysIntoOctaves {
+  (dummyKeys: number[]): Record<number, number[]>
+}
+
+const groupKeysIntoOctaves: GroupKeysIntoOctaves = (dummyKeys) =>
   dummyKeys
     .map((k) => [k, Math.floor(k / 12)])
     .reduce<Record<number, number[]>>(
@@ -8,3 +12,5 @@ export default (dummyKeys: number[]): Record<number, number[]> =>
       }),
       {},
     )
+
+export default groupKeysIntoOctaves

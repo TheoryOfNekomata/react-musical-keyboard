@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
-import isNaturalKey from '../../services/isNaturalKey'
-import getKeyWidth from '../../services/getKeyWidth'
-import getKeyLeft from '../../services/getKeyLeft'
+import mem from 'mem'
+import isNaturalKeyUnmemoized from '../../services/isNaturalKey'
+import getKeyWidthUnmemoized from '../../services/getKeyWidth'
+import getKeyLeftUnmemoized from '../../services/getKeyLeft'
 import generateKeys from '../../services/generateKeys'
 import * as DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
 import * as DefaultNaturalKey from '../NaturalKey/NaturalKey'
@@ -18,6 +19,10 @@ const Key = styled('div')({
   position: 'absolute',
   top: 0,
 })
+
+const getKeyWidth = mem(getKeyWidthUnmemoized, { cacheKey: (args) => args.join(':') })
+const getKeyLeft = mem(getKeyLeftUnmemoized, { cacheKey: (args) => args.join(':') })
+const isNaturalKey = mem(isNaturalKeyUnmemoized)
 
 export const propTypes = {
   /**

@@ -20,7 +20,7 @@
 
  */
 
-// export default [
+// export const KEY_OFFSETS = [
 //   0, // C
 //   3 / 7 / 5, // C#
 //   1 / 7, // D
@@ -36,7 +36,7 @@
 // ]
 
 // http://datagenetics.com/blog/may32016/index.html
-export default [
+export const KEY_OFFSETS = [
   0, // C
   525 / 5880, // C#
   1 / 7, // D
@@ -50,3 +50,5 @@ export default [
   (525 + 490 * 7 + 525 + 455) / 5880, // A#
   6 / 7, // B
 ]
+
+export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 13 / 23

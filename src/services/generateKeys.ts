@@ -3,8 +3,8 @@ interface GenerateKeys {
 }
 
 const generateKeys: GenerateKeys = (startKey, endKey) =>
-  Array(endKey! - startKey! + 1)
+  Array(endKey - startKey + 1)
     .fill(0)
-    .map((_, i) => startKey! + i)
+    .map((_, i) => startKey + i)
 
 export default generateKeys

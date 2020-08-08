@@ -1,6 +1,10 @@
 const NATURAL_KEYS = [0, 2, 4, 5, 7, 9, 11]
 
-export default (k: number): boolean => {
+interface IsNaturalKey {
+  (k: number): boolean
+}
+
+const isNaturalKey: IsNaturalKey = (k: number): boolean => {
   const type = typeof (k as unknown)
   if ((type as string) !== 'number') {
     throw TypeError(`Invalid value type passed to isNaturalKey, expected 'number', got ${type}.`)
@@ -13,3 +17,5 @@ export default (k: number): boolean => {
   }
   return NATURAL_KEYS.includes(Math.floor(k) % 12)
 }
+
+export default isNaturalKey

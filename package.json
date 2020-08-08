@@ -20,8 +20,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "mem": "^6.1.0",
-    "styled-components": "^5.1.1"
+    "mem": "^6.1.0"
   },
   "peerDependencies": {
     "react": ">=16"

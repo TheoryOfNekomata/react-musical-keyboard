@@ -9,7 +9,7 @@ const getOctaveCount = mem(getOctaveCountUnmemoized, { cacheKey: (args) => args.
 const getFractionalOctaveCount = mem(getFractionalOctaveCountUnmemoized, { cacheKey: (args) => args.join(':') })
 const getKeyOctave = mem(getKeyOctaveUnmemoized)
 
-interface GetKeyLeft {
+export interface GetKeyLeft {
   (k: number): number
 }
 

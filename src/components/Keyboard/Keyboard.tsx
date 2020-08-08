@@ -1,28 +1,11 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import styled from 'styled-components'
-import mem from 'mem'
 import isNaturalKeyUnmemoized from '../../services/isNaturalKey'
 import getKeyWidthUnmemoized from '../../services/getKeyWidth'
 import getKeyLeftUnmemoized from '../../services/getKeyLeft'
 import generateKeys from '../../services/generateKeys'
-import * as DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
-import * as DefaultNaturalKey from '../NaturalKey/NaturalKey'
-
-const Base = styled('div')({
-  position: 'relative',
-  backgroundColor: 'currentColor',
-  overflow: 'hidden',
-})
-
-const Key = styled('div')({
-  position: 'absolute',
-  top: 0,
-})
-
-const getKeyWidth = mem(getKeyWidthUnmemoized, { cacheKey: (args) => args.join(':') })
-const getKeyLeft = mem(getKeyLeftUnmemoized, { cacheKey: (args) => args.join(':') })
-const isNaturalKey = mem(isNaturalKeyUnmemoized)
+import DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
+import DefaultNaturalKey from '../NaturalKey/NaturalKey'
 
 export const propTypes = {
   /**
@@ -97,47 +80,49 @@ const Keyboard: React.FC<Props> = ({
 }) => {
   const [keys, setKeys] = React.useState<number[]>([])
 
+  const { natural: NaturalKey = DefaultNaturalKey, accidental: AccidentalKey = DefaultAccidentalKey } = keyComponents!
+
+  const getKeyWidth = React.useCallback((k) => getKeyWidthUnmemoized(startKey, endKey)(k), [startKey, endKey])
+  const getKeyLeft = React.useCallback((k) => getKeyLeftUnmemoized(startKey, endKey)(k), [startKey, endKey])
+  const isNaturalKey = React.useCallback((k) => isNaturalKeyUnmemoized(k), [])
+
   React.useEffect(() => {
     setKeys(generateKeys(startKey!, endKey!))
   }, [startKey, endKey])
 
-  const {
-    natural: NaturalKey = DefaultNaturalKey.default,
-    accidental: AccidentalKey = DefaultAccidentalKey.default,
-  } = keyComponents!
-
   return (
-    <Base
+    <div
       style={{
         width: width!,
         height: height!,
+        position: 'relative',
+        backgroundColor: 'currentColor',
+        overflow: 'hidden',
       }}
       role="presentation"
     >
-      {keys.map((k) => {
-        const isNatural = isNaturalKey(k)
+      {keys.map((key) => {
+        const isNatural = isNaturalKey(key)
         const Component: any = isNatural ? NaturalKey! : AccidentalKey!
-
-        const width = getKeyWidth(startKey!, endKey!)(k)
-        const height = isNatural ? 100 : 100 * accidentalKeyLengthRatio!
-        const left = getKeyLeft(startKey!, endKey!)(k)
-        const currentKeyChannels = Array.isArray(keyChannels!) ? keyChannels.filter((kc) => kc!.key === k) : null
+        const currentKeyChannels = Array.isArray(keyChannels!) ? keyChannels.filter((kc) => kc!.key === key) : null
 
         return (
-          <Key
-            key={k}
+          <div
+            key={key}
             style={{
               zIndex: isNatural ? 0 : 2,
-              width: width + '%',
-              height: height + '%',
-              left: left + '%',
+              width: getKeyWidth(key) + '%',
+              height: (isNatural ? 100 : 100 * accidentalKeyLengthRatio!) + '%',
+              left: getKeyLeft(key) + '%',
+              position: 'absolute',
+              top: 0,
             }}
           >
             <Component keyChannels={currentKeyChannels} />
-          </Key>
+          </div>
         )
       })}
-    </Base>
+    </div>
   )
 }
 

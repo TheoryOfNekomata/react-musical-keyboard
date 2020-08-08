@@ -4,7 +4,7 @@ import getOctaveCountUnmemoized from './getOctaveCount'
 import getFractionalOctaveCountUnmemoized from './getFractionalOctaveCount'
 import { ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO } from './constants'
 
-interface GetKeyWidth {
+export interface GetKeyWidth {
   (k: number): number
 }
 

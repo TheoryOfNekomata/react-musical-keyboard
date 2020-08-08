@@ -1,5 +1,5 @@
 interface GetOctaveCount {
-  (startKey: number, endKey: number): number,
+  (startKey: number, endKey: number): number
 }
 
 const getOctaveCount: GetOctaveCount = (startKey, endKey) => {

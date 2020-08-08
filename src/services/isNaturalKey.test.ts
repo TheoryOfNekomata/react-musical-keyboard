@@ -16,11 +16,11 @@ it('should accept 1 parameter', () => {
 it('should throw TypeError upon passing invalid types', () => {
   fc.assert(
     fc.property(
-      fc.anything().filter(anything => typeof anything !== 'number'),
-      anything => {
+      fc.anything().filter((anything) => typeof anything !== 'number'),
+      (anything) => {
         expect(() => isNaturalKey(anything as number)).toThrowError(TypeError)
-      }
-    )
+      },
+    ),
   )
 })
 
@@ -31,15 +31,11 @@ it('should throw RangeError upon passing NaN', () => {
 it('should throw RangeError upon passing negative numbers', () => {
   fc.assert(
     fc.property(
-      fc.anything().filter(anything => (
-        typeof anything! === 'number'
-        && !isNaN(anything)
-        && anything < 0
-      )),
-      negativeValue => {
+      fc.anything().filter((anything) => typeof anything! === 'number' && !isNaN(anything) && anything < 0),
+      (negativeValue) => {
         expect(() => isNaturalKey(negativeValue as number)).toThrowError(RangeError)
-      }
-    )
+      },
+    ),
   )
 })
 
@@ -47,30 +43,22 @@ describe('upon passing a positive number or zero', () => {
   it('should not throw any error', () => {
     fc.assert(
       fc.property(
-        fc.anything().filter(anything => (
-          typeof anything! === 'number'
-          && !isNaN(anything)
-          && anything >= 0
-        )),
-        value => {
+        fc.anything().filter((anything) => typeof anything! === 'number' && !isNaN(anything) && anything >= 0),
+        (value) => {
           expect(() => isNaturalKey(value as number)).not.toThrow()
-        }
-      )
+        },
+      ),
     )
   })
 
   it('should return a boolean', () => {
     fc.assert(
       fc.property(
-        fc.anything().filter(anything => (
-          typeof anything! === 'number'
-          && !isNaN(anything)
-          && anything >= 0
-        )),
-        value => {
+        fc.anything().filter((anything) => typeof anything! === 'number' && !isNaN(anything) && anything >= 0),
+        (value) => {
           expect(typeof isNaturalKey(value as number)).toBe('boolean')
-        }
-      )
+        },
+      ),
     )
   })
 })

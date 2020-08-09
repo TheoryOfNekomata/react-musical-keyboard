@@ -107,9 +107,8 @@ const StyledAccidentalKey: React.FC<Props> = ({ keyChannels }) => {
       <div
         style={{
           width: 'calc(2px * var(--size-scale-factor, 1))',
-          height: 'calc(11px * var(--size-scale-factor, 1))',
-          padding:
-            'calc(1px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1)) 0',
+          height: 'calc(10 / 52 * 100%)',
+          padding: '0 calc(1px * var(--size-scale-factor, 1)) 0 0',
           boxSizing: 'border-box',
           position: 'absolute',
           top: 0,
@@ -131,16 +130,13 @@ const StyledAccidentalKey: React.FC<Props> = ({ keyChannels }) => {
       <div
         style={{
           width: 'calc(2px * var(--size-scale-factor, 1))',
-          height: '100%',
-          padding:
-            'calc(10px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1)) calc(6px * var(--size-scale-factor, 1)) 0',
+          height: hasKeyChannels ? 'calc(38 / 52 * 100%)' : 'calc(34 / 52 * 100%)',
           boxSizing: 'border-box',
           position: 'absolute',
-          top: 0,
+          bottom: hasKeyChannels ? 'calc(4 / 52 * 100%)' : 'calc(8 / 52 * 100%)',
           right: 0,
-          paddingBottom: hasKeyChannels
-            ? 'calc(3px * var(--size-scale-factor, 1))'
-            : 'calc(5px * var(--size-scale-factor, 1))',
+          paddingRight: 'calc(1px * var(--size-scale-factor, 1))',
+          paddingLeft: 0,
           opacity: hasKeyChannels ? 0.5 : '1',
         }}
       >
@@ -157,6 +153,7 @@ const StyledAccidentalKey: React.FC<Props> = ({ keyChannels }) => {
       <div
         style={{
           width: '100%',
+          height: hasKeyChannels ? 'calc(2 / 52 * 100%)' : 'calc(6 / 52 * 100%)',
           padding:
             '0 calc(1px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1)) calc(1px * var(--size-scale-factor, 1))',
           boxSizing: 'border-box',
@@ -180,12 +177,11 @@ const StyledAccidentalKey: React.FC<Props> = ({ keyChannels }) => {
       <div
         style={{
           width: '100%',
-          height: '100%',
-          padding:
-            'calc(3px * var(--size-scale-factor, 1)) calc(3px * var(--size-scale-factor, 1)) calc(7px * var(--size-scale-factor, 1)) calc(3px * var(--size-scale-factor, 1))',
+          height: hasKeyChannels ? 'calc(42 / 52 * 100%)' : 'calc(38 / 52 * 100%)',
+          padding: '0 calc(3px * var(--size-scale-factor, 1)) 0 calc(3px * var(--size-scale-factor, 1))',
           boxSizing: 'border-box',
           position: 'absolute',
-          top: 0,
+          top: 'calc(3px * var(--size-scale-factor, 1))',
           left: 0,
         }}
       >
@@ -204,18 +200,14 @@ const StyledAccidentalKey: React.FC<Props> = ({ keyChannels }) => {
       <div
         style={{
           width: '100%',
-          padding:
-            '0 calc(1px * var(--size-scale-factor, 1)) calc(5px * var(--size-scale-factor, 1)) calc(2px * var(--size-scale-factor, 1))',
+          paddingTop: 0,
+          paddingRight: 'calc(1px * var(--size-scale-factor, 1))',
+          paddingLeft: 'calc(2px * var(--size-scale-factor, 1))',
           boxSizing: 'border-box',
           position: 'absolute',
-          bottom: 0,
+          bottom: hasKeyChannels ? 'calc(4 / 52 * 100%)' : 'calc(8 / 52 * 100%)',
           left: 0,
-          height: hasKeyChannels
-            ? 'calc(4px * var(--size-scale-factor, 1))'
-            : 'calc(6px * var(--size-scale-factor, 1))',
-          paddingBottom: hasKeyChannels
-            ? 'calc(3px * var(--size-scale-factor, 1))'
-            : 'calc(5px * var(--size-scale-factor, 1))',
+          height: 'calc(1px * var(--size-scale-factor, 1))',
           opacity: hasKeyChannels ? 0.5 : '1',
         }}
       >

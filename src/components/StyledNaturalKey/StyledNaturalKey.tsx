@@ -64,7 +64,7 @@ const StyledNaturalKey: React.FC<Props> = ({ keyChannels }) => {
           left: '0',
           maskImage: 'linear-gradient(to bottom, transparent, white)',
           WebkitMaskImage: 'linear-gradient(to bottom, transparent, white)',
-          backgroundColor: hasKeyChannels ? 'black' : LIGHT_COLOR,
+          backgroundColor: LIGHT_COLOR,
           opacity: hasKeyChannels ? 0.12 : 0.25,
         }}
       />

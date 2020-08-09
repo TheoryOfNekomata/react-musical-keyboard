@@ -36,19 +36,36 @@
 // ]
 
 // http://datagenetics.com/blog/may32016/index.html
+// export const KEY_OFFSETS = [
+//   0, // C
+//   525 / 5880, // C#
+//   1 / 7, // D
+//   (525 + 490 * 2) / 5880, // D#
+//   2 / 7, // E
+//   3 / 7, // F
+//   (525 + 490 * 3 + 525 + 455) / 5880, // F#
+//   4 / 7, // G
+//   (525 + 490 * 5 + 525 + 455) / 5880, // G#
+//   5 / 7, // A
+//   (525 + 490 * 7 + 525 + 455) / 5880, // A#
+//   6 / 7, // B
+// ]
+
 export const KEY_OFFSETS = [
-  0, // C
-  525 / 5880, // C#
-  1 / 7, // D
-  (525 + 490 * 2) / 5880, // D#
-  2 / 7, // E
-  3 / 7, // F
-  (525 + 490 * 3 + 525 + 455) / 5880, // F#
-  4 / 7, // G
-  (525 + 490 * 5 + 525 + 455) / 5880, // G#
-  5 / 7, // A
-  (525 + 490 * 7 + 525 + 455) / 5880, // A#
-  6 / 7, // B
+  0,
+  14 / 140,
+  1 / 7,
+  36 / 140,
+  2 / 7,
+  3 / 7,
+  73 / 140,
+  4 / 7,
+  95 / 140,
+  5 / 7,
+  117 / 140,
+  6 / 7,
 ]
 
-export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 13 / 23
+export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 9 / 16
+
+// export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 13 / 23

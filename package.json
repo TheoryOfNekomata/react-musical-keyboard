@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,11 +20,9 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "dependencies": {
-    "mem": "^6.1.0"
-  },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "mem": "^6.1.0"
   },
   "husky": {
     "hooks": {
@@ -59,6 +57,7 @@
     "ts-loader": "^8.0.2",
     "tsdx": "^0.13.2",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "mem": "^6.1.0"
   }
 }

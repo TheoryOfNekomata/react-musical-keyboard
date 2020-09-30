@@ -78,7 +78,8 @@ const Keyboard: React.FC<Props> = ({
   keyComponents = {},
   height = 80,
 }) => {
-  const [keys, setKeys] = React.useState<number[]>([])
+  const [clientSide, setClientSide] = React.useState(false)
+  const [clientSideKeys, setClientSideKeys] = React.useState<number[]>([])
 
   const { natural: NaturalKey = DefaultNaturalKey, accidental: AccidentalKey = DefaultAccidentalKey } = keyComponents!
 
@@ -87,8 +88,14 @@ const Keyboard: React.FC<Props> = ({
   const isNaturalKey = React.useCallback((k) => isNaturalKeyUnmemoized(k), [])
 
   React.useEffect(() => {
-    setKeys(generateKeys(startKey!, endKey!))
+    setClientSide(true)
+  }, [])
+
+  React.useEffect(() => {
+    setClientSideKeys(generateKeys(startKey!, endKey!))
   }, [startKey, endKey])
+
+  const keys = clientSide ? clientSideKeys : generateKeys(startKey, endKey)
 
   return (
     <div

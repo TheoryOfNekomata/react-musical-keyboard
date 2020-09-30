@@ -10,15 +10,9 @@ const getOctaveCount = mem(getOctaveCountUnmemoized, { cacheKey: (args) => args.
 const getFractionalOctaveCount = mem(getFractionalOctaveCountUnmemoized, { cacheKey: (args) => args.join(':') })
 const getKeyOctave = mem(getKeyOctaveUnmemoized, { cache: caches.getKeyOctave })
 
-export interface GetKeyLeft {
-  (k: number): number
-}
+type GetKeyLeft = (startKey: number, endKey: number) => (k: number) => number
 
-interface GetKeyLeftDecorator {
-  (startKey: number, endKey: number): GetKeyLeft
-}
-
-const getKeyLeftDecorator: GetKeyLeftDecorator = (startKey, endKey): GetKeyLeft => (k) => {
+const getKeyLeft: GetKeyLeft = (startKey, endKey) => (k) => {
   const fractionalOctaveCount = getFractionalOctaveCount(startKey, endKey)
   const octaveCount = getOctaveCount(startKey, endKey)
   const startOctave = getKeyOctave(startKey)
@@ -29,4 +23,4 @@ const getKeyLeftDecorator: GetKeyLeftDecorator = (startKey, endKey): GetKeyLeft 
   return theKeyOffset - firstKeyOffset
 }
 
-export default getKeyLeftDecorator
+export default getKeyLeft

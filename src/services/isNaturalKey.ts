@@ -1,8 +1,6 @@
 const NATURAL_KEYS = [0, 2, 4, 5, 7, 9, 11]
 
-interface IsNaturalKey {
-  (k: number): boolean
-}
+type IsNaturalKey = (k: number) => boolean
 
 const isNaturalKey: IsNaturalKey = (k: number): boolean => {
   const type = typeof (k as unknown)

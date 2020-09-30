@@ -1,6 +1,4 @@
-interface GenerateKeys {
-  (startKey: number, endKey: number): number[]
-}
+type GenerateKeys = (startKey: number, endKey: number) => number[]
 
 const generateKeys: GenerateKeys = (startKey, endKey) =>
   Array(endKey - startKey + 1)

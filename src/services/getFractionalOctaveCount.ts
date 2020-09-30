@@ -6,9 +6,7 @@ import * as caches from './caches'
 
 const getOctaveCompleteness = mem(getOctaveCompletenessUnmemoized, { cache: caches.getOctaveCompleteness })
 
-interface GetFractionalOctaveCount {
-  (startKey: number, endKey: number): number
-}
+type GetFractionalOctaveCount = (startKey: number, endKey: number) => number
 
 const getFractionalOctaveCount: GetFractionalOctaveCount = (startKey, endKey) => {
   const dummyKeys = generateKeys(startKey, endKey)

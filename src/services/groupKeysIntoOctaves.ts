@@ -1,6 +1,4 @@
-interface GroupKeysIntoOctaves {
-  (dummyKeys: number[]): Record<number, number[]>
-}
+type GroupKeysIntoOctaves = (dummyKeys: number[]) => Record<number, number[]>
 
 const groupKeysIntoOctaves: GroupKeysIntoOctaves = (dummyKeys) =>
   dummyKeys

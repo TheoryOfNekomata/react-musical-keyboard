@@ -1,6 +1,4 @@
-interface GetKeyOctave {
-  (k: number): number
-}
+type GetKeyOctave = (k: number) => number
 
 const getKeyOctave: GetKeyOctave = (k) => Math.floor(k / 12)
 

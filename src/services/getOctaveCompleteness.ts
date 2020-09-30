@@ -6,9 +6,7 @@ import isNaturalKeyUnmemoized from './isNaturalKey'
 const getKeyXOffset = mem(getKeyXOffsetUnmemoized, { cache: caches.getKeyXOffset })
 const isNaturalKey = mem(isNaturalKeyUnmemoized, { cache: caches.isNaturalKey })
 
-interface GetOctaveCompleteness {
-  (firstKey: number, lastKey: number): number
-}
+type GetOctaveCompleteness = (firstKey: number, lastKey: number) => number
 
 // expect firstKey and lastKey within the same octave
 const getOctaveCompleteness: GetOctaveCompleteness = (firstKey, lastKey) =>

@@ -10,7 +10,7 @@
   ],
   "publishing": {
     "github": {
-      "repository": "https://github.com/Temoto-kun/react-musical-keyboard",
+      "repository": "https://github.com/Temoto-kun/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://npm.pkg.github.com"
       }

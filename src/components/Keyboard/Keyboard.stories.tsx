@@ -154,18 +154,8 @@ const HasMapComponent = () => {
     setKeyChannels((oldKeys) => {
       const oldKeysKeys = oldKeys.map((k) => k.key)
       const newKeysKeys = newKeys.map((k) => k.key)
-      const keysOff = oldKeys
-        .filter((ok) => !newKeysKeys.includes(ok.key))
-        .map((k) => ({
-          ...k,
-          velocity: k.velocity > 1 ? 1 : k.velocity < 0 ? 0 : k.velocity,
-        }))
-      const keysOn = newKeys
-        .filter((nk) => !oldKeysKeys.includes(nk.key))
-        .map((k) => ({
-          ...k,
-          velocity: k.velocity > 1 ? 1 : k.velocity < 0 ? 0 : k.velocity,
-        }))
+      const keysOff = oldKeys.filter((ok) => !newKeysKeys.includes(ok.key))
+      const keysOn = newKeys.filter((nk) => !oldKeysKeys.includes(nk.key))
 
       keysOn.forEach((k) => {
         midiAccess.current?.send([0b10010000 + k.channel, k.key, Math.floor(k.velocity * 127)])

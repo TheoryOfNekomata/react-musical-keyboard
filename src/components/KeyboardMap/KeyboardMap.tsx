@@ -60,7 +60,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
 
     if (e.buttons === 1) {
       if (lastVelocity.current === undefined) {
-        lastVelocity.current = keyData.velocity
+        lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
       }
       keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, channel, id: -1 }]
       if (typeof onChange! === 'function') {
@@ -87,7 +87,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         return
       }
       if (lastVelocity.current === undefined) {
-        lastVelocity.current = keyData.velocity
+        lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
       }
       keysOnRef.current = [
         ...keysOnRef.current,
@@ -254,6 +254,10 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         return
       }
 
+      if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) {
+        return
+      }
+
       const { [e.code]: key = null } = keyboardMapping as Record<string, number>
 
       if (key === null) {
@@ -285,6 +289,10 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         return
       }
 
+      if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) {
+        return
+      }
+
       const { [e.code]: key = null } = keyboardMapping as Record<string, number>
 
       if (key === null) {
@@ -313,6 +321,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         width: '100%',
         height: '100%',
         zIndex: 4,
+        outline: 0,
       }}
       onContextMenu={handleContextMenu}
       onDragStart={handleDragStart}

@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "dependencies": {
+    "parcel": "^1.12.4"
+  },
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html -d ../docs --public-url ./"
+  },
+  "alias": {
+    "react": "../node_modules/react",
+    "react-dom": "../node_modules/react-dom/profiling",
+    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+  },
+  "browserslist": [
+    "last 2 Chrome versions"
+  ]
+}

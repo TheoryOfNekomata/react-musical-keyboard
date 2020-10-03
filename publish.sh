@@ -1,11 +1,13 @@
+defaultBranch=master
+
 for branch in $(cat package.json | jq .publishing | jq -r keys[]) ; do
   git checkout $branch
 
   rawRepository=$(cat package.json | jq -r .publishing.$branch.repository)
   repository=$(cat package.json | jq -r .publishing.$branch.repository)
-  currentRepository=$(cat package.json | jq -r .repository)
+  defaultRepository=$(cat package.json | jq -r .publishing.$defaultBranch.repository)
 
-  if [ $repository = $currentRepository ]; then
+  if [ $repository = $defaultRepository ]; then
     echo "$( jq --arg repository "$repository" '.repository = $repository' package.json )" > package.json
     echo "Publishing to primary repository: $repository"
     git push

@@ -10,12 +10,14 @@
   ],
   "publishing": {
     "github": {
+      "name": "@temoto-kun/react-musical-keyboard",
       "repository": "https://github.com/Temoto-kun/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://npm.pkg.github.com"
       }
     },
     "master": {
+      "name": "@theoryofnekomata/react-musical-keyboard",
       "repository": "https://code.modal.sh/TheoryOfNekomata/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://js.pack.modal.sh"

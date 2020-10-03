@@ -8,7 +8,7 @@ This component is currently available in:
 
 * [Modal.sh JavaScript Package Registry](https://js.pack.modal.sh)
 * [npm](https://npmjs.com)
-* [GitHub Package Registry](https://github.com/Temoto-kun/react-musical-keyboard/packages) for the [Github mirror](https://github.com/Temoto-kun/react-musical-keyboard)
+* [GitHub Package Registry](https://npm.pkg.github.com)
 
 Once set up, install the package from the registry:
 

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.11",
+  "version": "1.0.12",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,14 +11,12 @@
   "private": false,
   "publishing": {
     "github": {
-      "name": "@temoto-kun/react-musical-keyboard",
       "repository": "https://github.com/Temoto-kun/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://npm.pkg.github.com"
       }
     },
     "master": {
-      "name": "@theoryofnekomata/react-musical-keyboard",
       "repository": "https://code.modal.sh/TheoryOfNekomata/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://js.pack.modal.sh"

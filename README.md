@@ -133,8 +133,7 @@ const NaturalKey = ({
 export default NaturalKey
 ```
 
-Take note that pressed keys from multiple channels might overlap, therefore it is advisable to support multiple channels
-pressing a single key at once.
+Take note that pressed keys from multiple channels might overlap, therefore it is advisable to support multiple channels pressing a single key at once.
 
 ## License
 

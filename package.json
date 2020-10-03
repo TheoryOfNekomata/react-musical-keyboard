@@ -9,23 +9,19 @@
     "src"
   ],
   "publishing": {
-    "master": {
-      "branch": "master",
-      "repository": "https://code.modal.sh/TheoryOfNekomata/react-musical-keyboard.git",
-      "publishConfig": {
-        "registry": "https://js.pack.modal.sh"
-      }
-    },
     "github": {
-      "branch": "github",
       "repository": "https://github.com/Temoto-kun/react-musical-keyboard",
       "publishConfig": {
         "registry": "https://npm.pkg.github.com"
       }
     },
-    "npm": {
-      "branch": "npm",
+    "master": {
       "repository": "https://code.modal.sh/TheoryOfNekomata/react-musical-keyboard.git",
+      "publishConfig": {
+        "registry": "https://js.pack.modal.sh"
+      }
+    },
+    "npm": {
       "publishConfig": {
         "registry": "https://registry.npmjs.com"
       }

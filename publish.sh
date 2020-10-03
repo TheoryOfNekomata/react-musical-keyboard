@@ -15,7 +15,8 @@ for branch in $(cat package.json | jq .publishing | jq -r keys[]) ; do
     echo "$branch is a mirror"
     echo "$( jq --arg repository "$repository" '.repository = $repository' package.json )" > package.json
     echo "Publishing to mirror repository: $repository"
-    git push --mirror $currentRepository
+    git commit -am "Publish to $branch"
+    git push --mirror $repository
   fi
 
   registry=$(cat package.json | jq -r .publishing.$branch.publishConfig.registry)

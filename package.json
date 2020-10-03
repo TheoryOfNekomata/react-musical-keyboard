@@ -11,7 +11,7 @@
   "private": false,
   "publishing": {
     "github": {
-      "repository": "https://github.com/Temoto-kun/react-musical-keyboard.git",
+      "repository": "https://github.com/TheoryOfNekomata/react-musical-keyboard.git",
       "publishConfig": {
         "registry": "https://npm.pkg.github.com"
       }

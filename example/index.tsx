@@ -13,8 +13,11 @@ const App = () => {
   const [keyChannels, setKeyChannels] = React.useState<{ key: number; velocity: number; channel: number }[]>([])
   const [instruments, setInstruments, ] = React.useState<string[]>([])
   const [instrument, setInstrument] = React.useState(0)
+  const [inputs, setInputs] = React.useState<any[]>([])
+  const [input, setInput] = React.useState<number>()
   const generator = React.useRef<SoundGenerator | undefined>(undefined)
   const scrollRef = React.useRef<HTMLDivElement>(null)
+  const midiInputRef = React.useRef<any>(null)
 
   React.useEffect(() => {
     if (!generator.current) {
@@ -37,6 +40,48 @@ const App = () => {
       current.scrollLeft = current.scrollWidth * 0.4668
     }
   }, [scrollRef])
+
+  React.useEffect(() => {
+    const loadMIDIInputs = async () => {
+      const access = await navigator.requestMIDIAccess()
+      const inputs = Array.from(access.inputs.entries()).map(([handle, input]) => ({
+        handle,
+        input,
+      }))
+      midiInputRef.current = inputs[0].input
+      setInputs(inputs)
+      if (inputs.length > 0) {
+        setInput(0)
+      }
+    }
+
+    loadMIDIInputs()
+  }, [])
+
+  React.useEffect(() => {
+    const theInput = inputs[input]
+    const handleMidiMessage = (e: any) => {
+      const arg0 = e.data[0]
+      const arg1 = e.data[1]
+      const arg2 = e.data[2]
+
+      const type = arg0 & 0b11110000
+      if (type === 0b10010000 || type === 0b10000000) {
+        return
+      }
+      if (generator.current! && 'sendMessage' in generator.current!) {
+        generator.current!.sendMessage!(arg0 & 0b00001111, arg0 & 0b11110000, arg1, arg2)
+      }
+    }
+    if (theInput) {
+      theInput.input.addEventListener('midimessage', handleMidiMessage)
+    }
+    return () => {
+      if (theInput) {
+        theInput.input.removeEventListener('midimessage', handleMidiMessage)
+      }
+    }
+  }, [inputs, input])
 
   return (
     <React.Fragment>
@@ -70,13 +115,14 @@ const App = () => {
           id="keyboard-scroll"
         >
           <Keyboard
-            hasMap
             startKey={0}
             endKey={127}
             keyChannels={keyChannels}
             height="100%"
+            keyboardVelocity={0.75}
             onChange={Channel.handle({ setKeyChannels, generator: generator.current!, channel, })}
             keyboardMapping={keyboardMapping}
+            midiInput={inputs.length > 0 && typeof input! === 'number' ? inputs[input].input : undefined}
           />
         </div>
       </div>

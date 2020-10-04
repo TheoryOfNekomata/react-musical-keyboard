@@ -22,11 +22,6 @@ export const propTypes = {
    */
   endKey: PropTypes.number.isRequired,
 
-  /**
-   * Does the component have a clickable map?
-   */
-  hasMap: PropTypes.bool,
-
   //octaveDivision: PropTypes.number,
 
   /**
@@ -66,7 +61,7 @@ export const propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Map from key code to key number.
+   * Map from key code to key number, used to activate the component from the keyboard.
    */
   keyboardMapping: PropTypes.object,
   /**
@@ -81,6 +76,17 @@ export const propTypes = {
    * Destination of the component upon clicking a key, if behavior is set to 'link'.
    */
   href: PropTypes.func,
+  /**
+   * MIDI input for sending MIDI messages to the component.
+   */
+  midiInput: PropTypes.shape({
+    addEventListener: PropTypes.func.isRequired,
+    removeEventListener: PropTypes.func.isRequired,
+  }),
+  /**
+   * Received velocity when activating the component through the keyboard.
+   */
+  keyboardVelocity: PropTypes.number,
 }
 
 type Props = PropTypes.InferProps<typeof propTypes>
@@ -89,7 +95,6 @@ type Props = PropTypes.InferProps<typeof propTypes>
  * Component for displaying musical notes in the form of a piano keyboard.
  * @param startKey - MIDI note of the first key.
  * @param endKey - MIDI note of the last key.
- * @param hasMap - The component's clickable map component.
  * @param accidentalKeyLengthRatio - Ratio of the length of the accidental keys to the natural keys.
  * @param keyChannels - Current active keys and their channel assignments.
  * @param width - Width of the component.
@@ -98,6 +103,10 @@ type Props = PropTypes.InferProps<typeof propTypes>
  * @param name - Name of the component used for forms.
  * @param href - Destination of the component upon clicking a key, if behavior is set to 'link'.
  * @param behavior - Behavior of the component when clicking.
+ * @param onChange - Event handler triggered upon change in activated keys in the component.
+ * @param keyboardMapping - Map from key code to key number, used to activate the component from the keyboard.
+ * @param midiInput - Can MIDI input messages activate the component?
+ * @param keyboardVelocity - Received velocity when activating the component through the keyboard.
  */
 const Keyboard: React.FC<Props> = ({
   startKey,
@@ -113,6 +122,8 @@ const Keyboard: React.FC<Props> = ({
   behavior,
   name,
   href,
+  midiInput,
+  keyboardVelocity,
 }) => {
   const [clientSide, setClientSide] = React.useState(false)
   const [clientSideKeys, setClientSideKeys] = React.useState<number[]>([])
@@ -225,6 +236,8 @@ const Keyboard: React.FC<Props> = ({
             accidentalKeyLengthRatio={accidentalKeyLengthRatio}
             onChange={onChange}
             keyboardMapping={keyboardMapping}
+            midiInput={midiInput}
+            keyboardVelocity={keyboardVelocity}
           />
         )}
       </div>

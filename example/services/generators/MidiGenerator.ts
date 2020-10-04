@@ -2,7 +2,7 @@ import SoundGenerator from '../SoundGenerator'
 
 type MIDIMessage = [number, number, number?]
 
-interface MIDIOutput {
+export interface MIDIOutput {
   send(message: MIDIMessage): void
 }
 
@@ -20,6 +20,10 @@ export default class MidiGenerator implements SoundGenerator {
 
   changeInstrument(channel: number, patch: number) {
     this.output.send([0b11000000 + channel, patch])
+  }
+
+  sendMessage(channel: number, type: number, arg1: number, arg2?: number) {
+    this.output.send([type | channel, arg1, arg2])
   }
 
   getInstrumentNames(): string[] {

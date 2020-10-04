@@ -223,7 +223,6 @@ const HasMapComponent = () => {
   return (
     <Wrapper>
       <Keyboard
-        hasMap
         startKey={21}
         endKey={108}
         keyChannels={keyChannels}

@@ -1,5 +1,5 @@
 import SoundGenerator from '../services/SoundGenerator'
-import MidiGenerator from '../services/generators/MidiGenerator'
+import MidiGenerator, { MIDIOutput } from '../services/generators/MidiGenerator'
 import WaveGenerator from '../services/generators/WaveGenerator'
 
 type Load = () => Promise<SoundGenerator>

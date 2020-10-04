@@ -35,6 +35,8 @@ export const handle: Handle = ({ setKeyChannels, generator, channel, }) => newKe
       const keysOff = oldKeys.filter((ok) => !newKeysKeys.includes(ok.key))
       const keysOn = newKeys.filter((nk) => !oldKeysKeys.includes(nk.key))
 
+
+
       keysOn.forEach((k) => {
         generator.noteOn(channel, k.key, Math.floor(k.velocity * 127))
       })

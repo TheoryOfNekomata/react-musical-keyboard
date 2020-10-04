@@ -6,6 +6,10 @@ import getKeyLeftUnmemoized from '../../services/getKeyLeft'
 import generateKeys from '../../services/generateKeys'
 import DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
 import DefaultNaturalKey from '../NaturalKey/NaturalKey'
+import KeyboardMap from '../KeyboardMap/KeyboardMap'
+import getKeyBounds from '../../services/getKeyBounds'
+
+const BEHAVIOR = ['link', 'checkbox', 'radio'] as const
 
 export const propTypes = {
   /**
@@ -35,7 +39,6 @@ export const propTypes = {
    */
   keyChannels: PropTypes.arrayOf(
     PropTypes.shape({
-      channel: PropTypes.number.isRequired,
       key: PropTypes.number.isRequired,
       velocity: PropTypes.number.isRequired,
     }),
@@ -58,6 +61,26 @@ export const propTypes = {
    * Height of the component.
    */
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /**
+   * Event handler triggered upon change in activated keys in the component.
+   */
+  onChange: PropTypes.func,
+  /**
+   * Map from key code to key number.
+   */
+  keyboardMapping: PropTypes.object,
+  /**
+   * Behavior of the component when clicking.
+   */
+  behavior: PropTypes.oneOf(BEHAVIOR),
+  /**
+   * Name of the component used for forms.
+   */
+  name: PropTypes.string,
+  /**
+   * Destination of the component upon clicking a key, if behavior is set to 'link'.
+   */
+  href: PropTypes.func,
 }
 
 type Props = PropTypes.InferProps<typeof propTypes>
@@ -72,6 +95,9 @@ type Props = PropTypes.InferProps<typeof propTypes>
  * @param width - Width of the component.
  * @param keyComponents - Components to use for each kind of key.
  * @param height - Height of the component.
+ * @param name - Name of the component used for forms.
+ * @param href - Destination of the component upon clicking a key, if behavior is set to 'link'.
+ * @param behavior - Behavior of the component when clicking.
  */
 const Keyboard: React.FC<Props> = ({
   startKey,
@@ -82,7 +108,11 @@ const Keyboard: React.FC<Props> = ({
   width = '100%',
   keyComponents = {},
   height = 80,
-  children,
+  onChange,
+  keyboardMapping,
+  behavior,
+  name,
+  href,
 }) => {
   const [clientSide, setClientSide] = React.useState(false)
   const [clientSideKeys, setClientSideKeys] = React.useState<number[]>([])
@@ -105,89 +135,100 @@ const Keyboard: React.FC<Props> = ({
   const keys = clientSide ? clientSideKeys : generateKeys(startKey, endKey)
 
   return (
-    <div
-      style={{
-        width: width!,
-        height: height!,
-        position: 'relative',
-        backgroundColor: 'currentColor',
-        overflow: 'hidden',
-      }}
-      role="presentation"
-      ref={baseRef}
-    >
-      {keys.map((key) => {
-        const isNatural = isNaturalKey(key)
-        const Component: any = isNatural ? NaturalKey! : AccidentalKey!
-        const currentKeyChannels = Array.isArray(keyChannels!) ? keyChannels.filter((kc) => kc!.key === key) : null
-
-        const width = getKeyWidth(key)
-        const left = getKeyLeft(key)
-
-        let leftBounds: number
-        let rightBounds: number
-
-        switch (key % 12) {
-          case 0:
-          case 5:
-            leftBounds = left
-            rightBounds = key + 1 > endKey! ? left + width : getKeyLeft(key + 1)
-            break
-          case 4:
-          case 11:
-            leftBounds = key - 1 < startKey! ? left : getKeyLeft(key - 1) + getKeyWidth(key - 1)
-            rightBounds = left + width
-            break
-          case 2:
-          case 7:
-          case 9:
-            leftBounds = key - 1 < startKey! ? left : getKeyLeft(key - 1) + getKeyWidth(key - 1)
-            rightBounds = key + 1 > endKey! ? left + width : getKeyLeft(key + 1)
-            break
-          default:
-            leftBounds = left
-            rightBounds = left + width
-            break
+    <React.Fragment>
+      <style>{`
+        .ReactMusicalKeyboard-checkbox:checked + * {
+          --opacity-highlight: 1,
         }
+      `}</style>
+      <div
+        style={{
+          width: width!,
+          height: height!,
+          position: 'relative',
+          backgroundColor: 'currentColor',
+          overflow: 'hidden',
+        }}
+        role="presentation"
+        ref={baseRef}
+      >
+        {keys.map((key) => {
+          const isNatural = isNaturalKey(key)
+          const Component: any = isNatural ? NaturalKey! : AccidentalKey!
+          const [currentKey = null] = Array.isArray(keyChannels!) ? keyChannels.filter((kc) => kc!.key === key) : []
+          const width = getKeyWidth(key)
+          const left = getKeyLeft(key)
+          const { left: leftBounds, right: rightBounds } = getKeyBounds(
+            startKey,
+            endKey,
+            getKeyLeft,
+            getKeyWidth,
+          )(key, left, width)
+          const octaveStart = Math.floor(key / 12) * 12
+          const octaveEnd = octaveStart + 11
+          const octaveLeftBounds = getKeyLeft(octaveStart)
+          const octaveRightBounds = getKeyLeft(octaveEnd) + getKeyWidth(octaveEnd)
+          const components: Record<string, string> = {
+            link: 'a',
+            checkbox: 'label',
+            radio: 'label',
+          }
 
-        const octaveStart = Math.floor(key / 12) * 12
-        const octaveEnd = octaveStart + 11
-        const octaveLeftBounds = getKeyLeft(octaveStart)
-        const octaveRightBounds = getKeyLeft(octaveEnd) + getKeyWidth(octaveEnd)
+          const { [behavior!]: component = 'div' } = components
 
-        return (
-          <div
-            key={key}
-            data-key={key}
-            data-octave-left-bounds={octaveLeftBounds}
-            data-octave-right-bounds={octaveRightBounds}
-            data-left-bounds={leftBounds}
-            data-right-bounds={rightBounds}
-            data-left-full-bounds={isNatural ? left : undefined}
-            data-right-full-bounds={isNatural ? left + width : undefined}
-            style={{
-              zIndex: isNatural ? 0 : 2,
-              width: width + '%',
-              height: (isNatural ? 100 : 100 * accidentalKeyLengthRatio!) + '%',
-              left: left + '%',
-              position: 'absolute',
-              top: 0,
-            }}
-          >
-            <Component keyChannels={currentKeyChannels} />
-          </div>
-        )
-      })}
-      {children! &&
-        React.Children.map(children, (unknownChild) => {
-          const child = unknownChild as React.ReactElement
-          const { props = {} } = child
-          return React.cloneElement(child, {
-            ...props,
-            accidentalKeyLengthRatio,
-          })
+          const KeyComponent = component as React.ElementType
+
+          return (
+            <KeyComponent
+              key={key}
+              href={behavior === 'link' ? href!(key) : undefined}
+              data-key={key}
+              data-octave-left-bounds={octaveLeftBounds}
+              data-octave-right-bounds={octaveRightBounds}
+              data-left-bounds={leftBounds}
+              data-right-bounds={rightBounds}
+              data-left-full-bounds={isNatural ? left : undefined}
+              data-right-full-bounds={isNatural ? left + width : undefined}
+              style={{
+                zIndex: isNatural ? 0 : 2,
+                width: width + '%',
+                height: (isNatural ? 100 : 100 * accidentalKeyLengthRatio!) + '%',
+                left: left + '%',
+                position: 'absolute',
+                top: 0,
+                cursor: onChange || behavior ? 'pointer' : undefined,
+                color: 'inherit',
+                '--opacity-highlight': currentKey !== null ? 1 : 0,
+              }}
+            >
+              {(behavior! === 'checkbox' || behavior === 'radio') && (
+                <input
+                  type={behavior}
+                  className="ReactMusicalKeyboard-checkbox"
+                  name={name!}
+                  value={key}
+                  defaultChecked={currentKey !== null}
+                  style={{
+                    position: 'absolute',
+                    left: -999999,
+                    width: 1,
+                    height: 1,
+                  }}
+                />
+              )}
+              <Component />
+            </KeyComponent>
+          )
         })}
-    </div>
+        {clientSide && (
+          <KeyboardMap
+            accidentalKeyLengthRatio={accidentalKeyLengthRatio}
+            onChange={onChange}
+            keyboardMapping={keyboardMapping}
+          />
+        )}
+      </div>
+    </React.Fragment>
   )
 }
 

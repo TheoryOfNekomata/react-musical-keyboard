@@ -4,6 +4,10 @@ import reverseGetKeyFromPoint from '../../services/reverseGetKeyFromPoint'
 
 const propTypes = {
   /**
+   * Ratio of the length of the accidental keys to the natural keys.
+   */
+  accidentalKeyLengthRatio: PropTypes.number,
+  /**
    * Event handler triggered upon change in activated keys in the component.
    */
   onChange: PropTypes.func,
@@ -11,22 +15,17 @@ const propTypes = {
    * Map from key code to key number.
    */
   keyboardMapping: PropTypes.object,
-  /**
-   * Active MIDI channel for registering keys.
-   */
-  channel: PropTypes.number.isRequired,
 }
 
-type Props = PropTypes.InferProps<typeof propTypes> & { accidentalKeyLengthRatio?: number }
+type Props = PropTypes.InferProps<typeof propTypes>
 
 /**
  * Keyboard map for allowing interactivity with the keyboard.
- * @param channel - Active MIDI channel for registering keys.
- * @param accidentalKeyLengthRatio - Ratio of the length of the accidental keys to the natural keys. This is set by the Keyboard component.
+ * @param accidentalKeyLengthRatio - Ratio of the length of the accidental keys to the natural keys.
  * @param onChange - Event handler triggered upon change in activated keys in the component.
  * @param keyboardMapping - Map from key code to key number.
  */
-const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onChange, keyboardMapping = {} }) => {
+const KeyboardMap: React.FC<Props> = ({ accidentalKeyLengthRatio, onChange, keyboardMapping = {} }) => {
   const baseRef = React.useRef<HTMLDivElement>(null)
   const keysOnRef = React.useRef<any[]>([])
   const lastVelocity = React.useRef<number | undefined>(undefined)
@@ -62,7 +61,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
       if (lastVelocity.current === undefined) {
         lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
       }
-      keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, channel, id: -1 }]
+      keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, id: -1 }]
       if (typeof onChange! === 'function') {
         onChange(keysOnRef.current)
       }
@@ -89,10 +88,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
       if (lastVelocity.current === undefined) {
         lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
       }
-      keysOnRef.current = [
-        ...keysOnRef.current,
-        { ...keyData, velocity: lastVelocity.current, channel, id: t.identifier },
-      ]
+      keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, id: t.identifier }]
       if (typeof onChange! === 'function') {
         onChange(keysOnRef.current)
       }
@@ -136,7 +132,6 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
             ...keysOnRef.current.filter((k) => k.id !== t.identifier),
             {
               ...keyData,
-              channel,
               velocity: lastVelocity.current,
               id: t.identifier,
             },
@@ -152,7 +147,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
     return () => {
       window.removeEventListener('touchmove', handleTouchMove)
     }
-  }, [accidentalKeyLengthRatio, channel, onChange])
+  }, [accidentalKeyLengthRatio, onChange])
 
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -188,7 +183,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         if (mouseKey.key !== keyData.key) {
           keysOnRef.current = [
             ...keysOnRef.current.filter((k) => k.id !== -1),
-            { ...keyData, velocity: lastVelocity.current, channel, id: -1 },
+            { ...keyData, velocity: lastVelocity.current, id: -1 },
           ]
           if (typeof onChange! === 'function') {
             onChange(keysOnRef.current)
@@ -201,7 +196,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [accidentalKeyLengthRatio, channel, onChange])
+  }, [accidentalKeyLengthRatio, onChange])
 
   React.useEffect(() => {
     const handleTouchEnd = (e: TouchEvent) => {
@@ -245,7 +240,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
     return () => {
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [accidentalKeyLengthRatio, channel, onChange])
+  }, [accidentalKeyLengthRatio, onChange])
 
   React.useEffect(() => {
     const baseRefComponent = baseRef.current
@@ -267,7 +262,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
       if (keysOnRef.current.some((k) => k.key === key && k.id === -2)) {
         return
       }
-      keysOnRef.current = [...keysOnRef.current, { key, velocity: 0.75, channel, id: -2 }]
+      keysOnRef.current = [...keysOnRef.current, { key, velocity: 0.75, id: -2 }]
       if (typeof onChange! === 'function') {
         onChange(keysOnRef.current)
       }
@@ -322,6 +317,7 @@ const KeyboardMap: React.FC<Props> = ({ channel, accidentalKeyLengthRatio, onCha
         height: '100%',
         zIndex: 4,
         outline: 0,
+        cursor: 'pointer',
       }}
       onContextMenu={handleContextMenu}
       onDragStart={handleDragStart}

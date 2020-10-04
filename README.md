@@ -43,6 +43,8 @@ window.document.body.appendChild(container)
 ReactDOM.render(<App />, container)
 ```
 
+### Interactivity
+
 The library also supports keyboard maps for handling mouse, touch, and keyboard events:
 
 ```jsx harmony
@@ -60,12 +62,8 @@ const App = () => {
       <Keyboard
         startKey={21}
         endKey={108}
-      >
-        <KeyboardMap
-          channel={0}
-          onChange={handleKeysChange}
-        />
-      </Keyboard>
+        onChange={handleKeysChange}
+      />
     </div>
   )
 }
@@ -76,6 +74,10 @@ window.document.body.appendChild(container)
 
 ReactDOM.render(<App />, container)
 ```
+
+It is capable of server-side rendering support, falling back to making the keys behave like links, checkboxes or radio buttons. Simply supply the `behavior` prop.
+
+### Customization
 
 The component is stylable, just supply custom components for the keys:
 
@@ -108,7 +110,9 @@ window.document.body.appendChild(container)
 ReactDOM.render(<App />, container)
 ```
 
-Custom keys should accept a `keyChannels` prop for active keys. For instance, in the custom key components imported above:
+Components get their styles from CSS. The custom property `--opacity-highlight` is responsible for toggling the active, or "pressed" state of the key, simply assign it to the `opacity` style of the component you want to show for active keys.
+
+The library also exposes other custom properties: `--color-natural-key`, `--color-accidental-key`, and `--color-active-key` for basic coloring of the keys. You may expose your own properties for your custom key components.
 
 ```jsx harmony
 // ./my-styled-keys/NaturalKey.js
@@ -121,11 +125,9 @@ const NaturalKey = ({
   keyChannels = []
 }) => {
   return (
-    <div>
-      <img src={NOT_PRESSED_KEY} alt="" />
-      {keyChannels.map(k => (
-        <img key={k.channel} src={PRESSED_KEY_OVERLAY} alt="" />
-      ))}
+    <div style={{ position: 'relative' }}>
+      <img src={NOT_PRESSED_KEY} alt="" style={{ position: 'absolute', top: 0, left: 0, }} />
+      <img src={PRESSED_KEY_OVERLAY} style={{ position: 'absolute', top: 0, left: 0, opacity: 'var(--opacity-highlight)', }} alt="" />
     </div>
   )
 }

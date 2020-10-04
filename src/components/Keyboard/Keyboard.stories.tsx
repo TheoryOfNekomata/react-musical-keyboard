@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types'
 import StyledAccidentalKey from '../StyledAccidentalKey/StyledAccidentalKey'
 import StyledNaturalKey from '../StyledNaturalKey/StyledNaturalKey'
 import Keyboard, { propTypes } from './Keyboard'
-import KeyboardMap from '../KeyboardMap/KeyboardMap'
 
 const Wrapper: React.FC = (props) => (
   <div
@@ -52,17 +51,14 @@ export const WithActiveKeys = (props?: Partial<Props>) => (
       endKey={108}
       keyChannels={[
         {
-          channel: 0,
           key: 60,
           velocity: 1,
         },
         {
-          channel: 0,
           key: 64,
           velocity: 1,
         },
         {
-          channel: 0,
           key: 67,
           velocity: 1,
         },
@@ -78,41 +74,11 @@ export const WithDifferentKeyRange = (props?: Partial<Props>) => (
 )
 
 export const Styled = (props?: Partial<Props>) => (
-  <Wrapper>
-    <Keyboard
-      {...props}
-      startKey={21}
-      endKey={108}
-      keyChannels={[
-        {
-          channel: 0,
-          key: 60,
-          velocity: 1,
-        },
-        {
-          channel: 0,
-          key: 63,
-          velocity: 1,
-        },
-        {
-          channel: 0,
-          key: 67,
-          velocity: 1,
-        },
-      ]}
-      keyComponents={{
-        natural: StyledNaturalKey,
-        accidental: StyledAccidentalKey,
-      }}
-    />
-  </Wrapper>
-)
-
-export const AnotherStyled = (props?: Partial<Props>) => (
   <div
     style={{
       // @ts-ignore
-      '--size-scale-factor': 2,
+      '--color-accidental-key': '#35313b',
+      '--color-natural-key': '#e3e3e5',
     }}
   >
     <Wrapper>
@@ -122,17 +88,89 @@ export const AnotherStyled = (props?: Partial<Props>) => (
         endKey={108}
         keyChannels={[
           {
-            channel: 0,
             key: 60,
             velocity: 1,
           },
           {
-            channel: 0,
             key: 63,
             velocity: 1,
           },
           {
-            channel: 0,
+            key: 67,
+            velocity: 1,
+          },
+        ]}
+        keyComponents={{
+          natural: StyledNaturalKey,
+          accidental: StyledAccidentalKey,
+        }}
+      />
+    </Wrapper>
+  </div>
+)
+
+export const AnotherStyled = (props?: Partial<Props>) => (
+  <div
+    style={{
+      // @ts-ignore
+      '--size-scale-factor': 2,
+      '--color-accidental-key': '#35313b',
+      '--color-natural-key': '#e3e3e5',
+    }}
+  >
+    <Wrapper>
+      <Keyboard
+        {...props}
+        startKey={21}
+        endKey={108}
+        keyChannels={[
+          {
+            key: 60,
+            velocity: 1,
+          },
+          {
+            key: 63,
+            velocity: 1,
+          },
+          {
+            key: 67,
+            velocity: 1,
+          },
+        ]}
+        keyComponents={{
+          natural: StyledNaturalKey,
+          accidental: StyledAccidentalKey,
+        }}
+      />
+    </Wrapper>
+  </div>
+)
+
+export const DarkStyled = (props?: Partial<Props>) => (
+  <div
+    style={{
+      // @ts-ignore
+      '--size-scale-factor': 2,
+      '--color-accidental-key': '#666666',
+      '--color-natural-key': '#35313b',
+      '--color-active-key': 'red',
+    }}
+  >
+    <Wrapper>
+      <Keyboard
+        {...props}
+        startKey={21}
+        endKey={108}
+        keyChannels={[
+          {
+            key: 60,
+            velocity: 1,
+          },
+          {
+            key: 63,
+            velocity: 1,
+          },
+          {
             key: 67,
             velocity: 1,
           },
@@ -156,13 +194,14 @@ const HasMapComponent = () => {
       const newKeysKeys = newKeys.map((k) => k.key)
       const keysOff = oldKeys.filter((ok) => !newKeysKeys.includes(ok.key))
       const keysOn = newKeys.filter((nk) => !oldKeysKeys.includes(nk.key))
+      const channel = 0
 
       keysOn.forEach((k) => {
-        midiAccess.current?.send([0b10010000 + k.channel, k.key, Math.floor(k.velocity * 127)])
+        midiAccess.current?.send([0b10010000 + channel, k.key, Math.floor(k.velocity * 127)])
       })
 
       keysOff.forEach((k) => {
-        midiAccess.current?.send([0b10000000 + k.channel, k.key, Math.floor(k.velocity * 127)])
+        midiAccess.current?.send([0b10000000 + channel, k.key, Math.floor(k.velocity * 127)])
       })
 
       return newKeys
@@ -183,54 +222,73 @@ const HasMapComponent = () => {
 
   return (
     <Wrapper>
-      <Keyboard hasMap startKey={21} endKey={108} keyChannels={keyChannels}>
-        <KeyboardMap
-          channel={0}
-          onChange={handleKeyOn}
-          keyboardMapping={{
-            KeyQ: 60,
-            Digit2: 61,
-            KeyW: 62,
-            Digit3: 63,
-            KeyE: 64,
-            KeyR: 65,
-            Digit5: 66,
-            KeyT: 67,
-            Digit6: 68,
-            KeyY: 69,
-            Digit7: 70,
-            KeyU: 71,
-            KeyI: 72,
-            Digit9: 73,
-            KeyO: 74,
-            Digit0: 75,
-            KeyP: 76,
-            BracketLeft: 77,
-            Equal: 78,
-            BracketRight: 79,
+      <Keyboard
+        hasMap
+        startKey={21}
+        endKey={108}
+        keyChannels={keyChannels}
+        onChange={handleKeyOn}
+        keyboardMapping={{
+          KeyQ: 60,
+          Digit2: 61,
+          KeyW: 62,
+          Digit3: 63,
+          KeyE: 64,
+          KeyR: 65,
+          Digit5: 66,
+          KeyT: 67,
+          Digit6: 68,
+          KeyY: 69,
+          Digit7: 70,
+          KeyU: 71,
+          KeyI: 72,
+          Digit9: 73,
+          KeyO: 74,
+          Digit0: 75,
+          KeyP: 76,
+          BracketLeft: 77,
+          Equal: 78,
+          BracketRight: 79,
 
-            KeyZ: 48,
-            KeyS: 49,
-            KeyX: 50,
-            KeyD: 51,
-            KeyC: 52,
-            KeyV: 53,
-            KeyG: 54,
-            KeyB: 55,
-            KeyH: 56,
-            KeyN: 57,
-            KeyJ: 58,
-            KeyM: 59,
-            Comma: 60,
-            KeyL: 61,
-            Period: 62,
-            Semicolon: 63,
-            Slash: 64,
-          }}
-        />
-      </Keyboard>
+          KeyZ: 48,
+          KeyS: 49,
+          KeyX: 50,
+          KeyD: 51,
+          KeyC: 52,
+          KeyV: 53,
+          KeyG: 54,
+          KeyB: 55,
+          KeyH: 56,
+          KeyN: 57,
+          KeyJ: 58,
+          KeyM: 59,
+          Comma: 60,
+          KeyL: 61,
+          Period: 62,
+          Semicolon: 63,
+          Slash: 64,
+        }}
+      />
     </Wrapper>
   )
 }
 
 export const HasMap = () => <HasMapComponent />
+
+export const Checkbox = (props?: Partial<Props>) => (
+  <Wrapper>
+    <Keyboard {...props} startKey={21} endKey={108} behavior="checkbox" name="checkbox" />
+  </Wrapper>
+)
+
+export const Radio = (props?: Partial<Props>) => (
+  <Wrapper>
+    <Keyboard {...props} startKey={21} endKey={108} behavior="radio" name="radio" />
+  </Wrapper>
+)
+
+export const Link = (props?: Partial<Props>) => (
+  <Wrapper>
+    <Keyboard {...props} startKey={21} endKey={108} behavior="link" href={(key) => `?key=${key}`} />
+  </Wrapper>
+)

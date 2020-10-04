@@ -1,7 +1,7 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 
-import Keyboard, { KeyboardMap } from '../src'
+import Keyboard  from '../src'
 import * as Channel from './controllers/Channel'
 import * as Instrument from './controllers/Instrument'
 import * as Generator from './controllers/Generator'
@@ -75,13 +75,9 @@ const App = () => {
             endKey={127}
             keyChannels={keyChannels}
             height="100%"
-          >
-            <KeyboardMap
-              channel={channel}
-              onChange={Channel.handle({ setKeyChannels, generator: generator.current!, })}
-              keyboardMapping={keyboardMapping}
-            />
-          </Keyboard>
+            onChange={Channel.handle({ setKeyChannels, generator: generator.current!, channel, })}
+            keyboardMapping={keyboardMapping}
+          />
         </div>
       </div>
     </React.Fragment>

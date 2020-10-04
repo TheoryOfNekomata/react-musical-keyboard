@@ -24,9 +24,10 @@ type KeyChannelCallback = (oldKeys: KeyChannel[]) => KeyChannel[]
 type HandleProps = {
   setKeyChannels(callback: KeyChannelCallback | KeyChannel[]): void,
   generator?: SoundGenerator,
+  channel: number,
 }
 type Handle = (props: HandleProps) => (newKeys: KeyChannel[]) => void
-export const handle: Handle = ({ setKeyChannels, generator, }) => newKeys => {
+export const handle: Handle = ({ setKeyChannels, generator, channel, }) => newKeys => {
   setKeyChannels((oldKeys) => {
     if (generator! !== undefined) {
       const oldKeysKeys = oldKeys.map((k) => k.key)
@@ -35,11 +36,11 @@ export const handle: Handle = ({ setKeyChannels, generator, }) => newKeys => {
       const keysOn = newKeys.filter((nk) => !oldKeysKeys.includes(nk.key))
 
       keysOn.forEach((k) => {
-        generator.noteOn(k.channel, k.key, Math.floor(k.velocity * 127))
+        generator.noteOn(channel, k.key, Math.floor(k.velocity * 127))
       })
 
       keysOff.forEach((k) => {
-        generator.noteOff(k.channel, k.key, Math.floor(k.velocity * 127))
+        generator.noteOff(channel, k.key, Math.floor(k.velocity * 127))
       })
     }
 

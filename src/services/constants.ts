@@ -87,3 +87,9 @@ export const KEY_OFFSETS = [
 export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 9 / 16
 
 // export const ACCIDENTAL_KEY_TO_NATURAL_KEY_WIDTH_RATIO = 13 / 23
+
+export const BEHAVIORS = ['link', 'checkbox', 'radio'] as const
+
+export const OCTAVE_DIVISIONS = [12, 17, 19, 21, 24, 36] as const
+
+export const ORIENTATIONS = [0, 90, 180, 270] as const

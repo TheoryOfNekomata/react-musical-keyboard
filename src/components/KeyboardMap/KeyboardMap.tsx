@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import reverseGetKeyFromPoint from '../../services/reverseGetKeyFromPoint'
 import { MIDIMessageEvent } from '../../services/midi'
+import { ORIENTATIONS } from '../../services/constants'
 
 const propTypes = {
   /**
@@ -27,17 +28,20 @@ const propTypes = {
     addEventListener: PropTypes.func.isRequired,
     removeEventListener: PropTypes.func.isRequired,
   }),
+  /**
+   * Orientation of the component.
+   */
+  orientation: PropTypes.oneOf(ORIENTATIONS),
+  /**
+   * Is the component mirrored?
+   */
+  mirrored: PropTypes.bool,
 }
 
 type Props = PropTypes.InferProps<typeof propTypes>
 
 /**
  * Keyboard map for allowing interactivity with the keyboard.
- * @param accidentalKeyLengthRatio - Ratio of the length of the accidental keys to the natural keys.
- * @param onChange - Event handler triggered upon change in activated keys in the component.
- * @param keyboardMapping - Map from key code to key number.
- * @param midiInput - MIDI input for sending MIDI messages to the component.
- * @param keyboardVelocity - Received velocity when activating the component through the keyboard.
  */
 const KeyboardMap: React.FC<Props> = ({
   accidentalKeyLengthRatio,
@@ -45,6 +49,8 @@ const KeyboardMap: React.FC<Props> = ({
   keyboardMapping = {},
   midiInput,
   keyboardVelocity = 0.75,
+  orientation = 0,
+  mirrored = false,
 }) => {
   const baseRef = React.useRef<HTMLDivElement>(null)
   const keysOnRef = React.useRef<any[]>([])
@@ -54,46 +60,66 @@ const KeyboardMap: React.FC<Props> = ({
     e.preventDefault()
   }
 
-  const handleMouseDown: React.MouseEventHandler = (e) => {
-    if (baseRef.current === null) {
-      return
-    }
-    if (baseRef.current.parentElement === null) {
-      return
-    }
-    if (e.buttons !== 1) {
-      return
-    }
-    const keyData = reverseGetKeyFromPoint(baseRef.current!.parentElement!, accidentalKeyLengthRatio!)(
-      e.clientX,
-      e.clientY,
-    )
-    if (keyData! === null) {
-      return
-    }
-    if (lastVelocity.current === undefined) {
-      lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
-    }
-    keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, id: -1 }]
-    if (typeof onChange! === 'function') {
-      onChange(keysOnRef.current)
-    }
-  }
-
   React.useEffect(() => {
     const baseRefCurrent = baseRef.current
-    const handleTouchStart = (e: TouchEvent) => {
-      e.preventDefault()
+    const handleMouseDown = (e: MouseEvent) => {
       if (baseRef.current === null) {
         return
       }
       if (baseRef.current.parentElement === null) {
         return
       }
+      if (e.buttons !== 1) {
+        return
+      }
+      e.preventDefault()
+      const keyData = reverseGetKeyFromPoint(
+        baseRef.current!.parentElement!,
+        accidentalKeyLengthRatio!,
+        orientation!,
+        mirrored!,
+      )(e.clientX, e.clientY)
+      if (keyData! === null) {
+        return
+      }
+      if (lastVelocity.current === undefined) {
+        lastVelocity.current = keyData.velocity > 1 ? 1 : keyData.velocity < 0 ? 0 : keyData.velocity
+      }
+      keysOnRef.current = [...keysOnRef.current, { ...keyData, velocity: lastVelocity.current, id: -1 }]
+      if (typeof onChange! === 'function') {
+        onChange(keysOnRef.current)
+      }
+    }
+
+    if (baseRefCurrent !== null) {
+      baseRefCurrent.addEventListener('mousedown', handleMouseDown, { passive: false })
+    }
+    return () => {
+      if (baseRefCurrent !== null) {
+        baseRefCurrent.removeEventListener('mousedown', handleMouseDown)
+      }
+    }
+  }, [accidentalKeyLengthRatio, onChange, orientation, mirrored])
+
+  React.useEffect(() => {
+    const baseRefCurrent = baseRef.current
+    const handleTouchStart = (e: TouchEvent) => {
+      if (baseRef.current === null) {
+        return
+      }
+      if (baseRef.current.parentElement === null) {
+        return
+      }
+      e.preventDefault()
       const touches = Array.from(e.changedTouches)
       const touchKeyData = touches.map<[React.Touch, { key: number; velocity: number } | null]>((t) => [
         t,
-        reverseGetKeyFromPoint(baseRef.current!.parentElement!, accidentalKeyLengthRatio!)(t.clientX, t.clientY),
+        reverseGetKeyFromPoint(
+          baseRef.current!.parentElement!,
+          accidentalKeyLengthRatio!,
+          orientation!,
+          mirrored!,
+        )(t.clientX, t.clientY),
       ])
       const validTouchKeyData = touchKeyData.filter(([, keyData]) => keyData! !== null)
       validTouchKeyData.forEach(([t, keyData]) => {
@@ -116,22 +142,24 @@ const KeyboardMap: React.FC<Props> = ({
         baseRefCurrent.removeEventListener('touchstart', handleTouchStart)
       }
     }
-  }, [accidentalKeyLengthRatio, onChange])
+  }, [accidentalKeyLengthRatio, onChange, orientation, mirrored])
 
   React.useEffect(() => {
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault()
       if (baseRef.current === null) {
         return
       }
       if (baseRef.current.parentElement === null) {
         return
       }
+      e.preventDefault()
       Array.from(e.changedTouches).forEach((t) => {
-        const keyData = reverseGetKeyFromPoint(baseRef.current!.parentElement!, accidentalKeyLengthRatio!)(
-          t.clientX,
-          t.clientY,
-        )
+        const keyData = reverseGetKeyFromPoint(
+          baseRef.current!.parentElement!,
+          accidentalKeyLengthRatio!,
+          orientation!,
+          mirrored!,
+        )(t.clientX, t.clientY)
         if (keyData! === null) {
           keysOnRef.current = keysOnRef.current.filter((k) => k.id !== t.identifier)
           if (typeof onChange! === 'function') {
@@ -167,11 +195,10 @@ const KeyboardMap: React.FC<Props> = ({
     return () => {
       window.removeEventListener('touchmove', handleTouchMove)
     }
-  }, [accidentalKeyLengthRatio, onChange])
+  }, [accidentalKeyLengthRatio, onChange, orientation, mirrored])
 
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      e.preventDefault()
       if (baseRef.current === null) {
         return
       }
@@ -181,10 +208,13 @@ const KeyboardMap: React.FC<Props> = ({
       if (e.buttons !== 1) {
         return
       }
-      const keyData = reverseGetKeyFromPoint(baseRef.current!.parentElement, accidentalKeyLengthRatio!)(
-        e.clientX,
-        e.clientY,
-      )
+      e.preventDefault()
+      const keyData = reverseGetKeyFromPoint(
+        baseRef.current!.parentElement,
+        accidentalKeyLengthRatio!,
+        orientation!,
+        mirrored!,
+      )(e.clientX, e.clientY)
       if (keyData! === null) {
         keysOnRef.current = keysOnRef.current.filter((k) => k.id !== -1)
         if (typeof onChange! === 'function') {
@@ -215,7 +245,7 @@ const KeyboardMap: React.FC<Props> = ({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [accidentalKeyLengthRatio, onChange])
+  }, [accidentalKeyLengthRatio, onChange, orientation, mirrored])
 
   React.useEffect(() => {
     const handleTouchEnd = (e: TouchEvent) => {
@@ -233,43 +263,23 @@ const KeyboardMap: React.FC<Props> = ({
         }
       })
     }
+    window.addEventListener('touchcancel', handleTouchEnd)
     window.addEventListener('touchend', handleTouchEnd)
     return () => {
+      window.removeEventListener('touchcancel', handleTouchEnd)
       window.removeEventListener('touchend', handleTouchEnd)
     }
   }, [onChange])
 
   React.useEffect(() => {
-    const handleTouchCancel = (e: TouchEvent) => {
-      if (baseRef.current === null) {
-        return
-      }
-      if (baseRef.current.parentElement === null) {
-        return
-      }
-      Array.from(e.changedTouches).forEach((t) => {
-        keysOnRef.current = keysOnRef.current.filter((k) => k.id !== t.identifier)
-        lastVelocity.current = undefined
-        if (typeof onChange! === 'function') {
-          onChange(keysOnRef.current)
-        }
-      })
-    }
-    window.addEventListener('touchcancel', handleTouchCancel)
-    return () => {
-      window.removeEventListener('touchcancel', handleTouchCancel)
-    }
-  }, [onChange])
-
-  React.useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
-      e.preventDefault()
       if (baseRef.current === null) {
         return
       }
       if (baseRef.current.parentElement === null) {
         return
       }
+      e.preventDefault()
       keysOnRef.current = keysOnRef.current.filter((k) => k.id !== -1)
       lastVelocity.current = undefined
       if (typeof onChange! === 'function') {
@@ -281,7 +291,7 @@ const KeyboardMap: React.FC<Props> = ({
     return () => {
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [accidentalKeyLengthRatio, onChange])
+  }, [onChange])
 
   React.useEffect(() => {
     const baseRefComponent = baseRef.current
@@ -295,11 +305,9 @@ const KeyboardMap: React.FC<Props> = ({
       }
 
       const { [e.code]: key = null } = theKeyboardMapping
-
       if (key === null) {
         return
       }
-
       if (keysOnRef.current.some((k) => k.key === key && k.id === -2)) {
         return
       }
@@ -357,10 +365,11 @@ const KeyboardMap: React.FC<Props> = ({
       let velocity: number
 
       switch (arg0 & 0b11110000) {
-        case 0b10010000:
+        case 0b10010000: // Note On
           velocity = arg2 & 0b01111111
           key = arg1 & 0b01111111
           if (velocity > 0) {
+            // some MIDI inputs set note off as simply note on with zero velocity
             keysOnRef.current = [
               ...keysOnRef.current,
               {
@@ -376,7 +385,7 @@ const KeyboardMap: React.FC<Props> = ({
             onChange(keysOnRef.current)
           }
           break
-        case 0b10000000:
+        case 0b10000000: // Note off
           key = arg1 & 0b01111111
           keysOnRef.current = keysOnRef.current.filter((k) => k.key !== key)
           if (typeof onChange! === 'function') {
@@ -412,7 +421,6 @@ const KeyboardMap: React.FC<Props> = ({
       }}
       onContextMenu={preventDefault}
       onDragStart={preventDefault}
-      onMouseDown={handleMouseDown}
       tabIndex={0}
     />
   )

@@ -184,7 +184,7 @@ export const DarkStyled = (props?: Partial<Props>) => (
   </div>
 )
 
-const HasMapComponent = () => {
+const HasMapComponent = (props: any) => {
   const [keyChannels, setKeyChannels] = React.useState<{ key: number; velocity: number; channel: number }[]>([])
   const midiAccess = React.useRef<any>(undefined)
 
@@ -223,6 +223,7 @@ const HasMapComponent = () => {
   return (
     <Wrapper>
       <Keyboard
+        {...props}
         startKey={21}
         endKey={108}
         keyChannels={keyChannels}
@@ -274,6 +275,8 @@ const HasMapComponent = () => {
 
 export const HasMap = () => <HasMapComponent />
 
+export const Mirrored = () => <HasMapComponent mirrored />
+
 export const Checkbox = (props?: Partial<Props>) => (
   <Wrapper>
     <Keyboard {...props} startKey={21} endKey={108} behavior="checkbox" name="checkbox" />
@@ -290,4 +293,24 @@ export const Link = (props?: Partial<Props>) => (
   <Wrapper>
     <Keyboard {...props} startKey={21} endKey={108} behavior="link" href={(key) => `?key=${key}`} />
   </Wrapper>
+)
+
+export const Rotated90 = (props?: Partial<Props>) => (
+  <HasMapComponent {...props} orientation={90} width={80} height={600} />
+)
+
+export const Rotated180 = (props?: Partial<Props>) => <HasMapComponent {...props} orientation={180} />
+
+export const Rotated270 = (props?: Partial<Props>) => (
+  <HasMapComponent {...props} orientation={270} width={80} height={600} />
+)
+
+export const Rotated90Mirrored = (props?: Partial<Props>) => (
+  <HasMapComponent {...props} orientation={90} width={80} height={600} mirrored />
+)
+
+export const Rotated180Mirrored = (props?: Partial<Props>) => <HasMapComponent {...props} orientation={180} mirrored />
+
+export const Rotated270Mirrored = (props?: Partial<Props>) => (
+  <HasMapComponent {...props} orientation={270} width={80} height={600} mirrored />
 )

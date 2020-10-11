@@ -8,8 +8,7 @@ import DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
 import DefaultNaturalKey from '../NaturalKey/NaturalKey'
 import KeyboardMap from '../KeyboardMap/KeyboardMap'
 import getKeyBounds from '../../services/getKeyBounds'
-
-const BEHAVIOR = ['link', 'checkbox', 'radio'] as const
+import { BEHAVIORS, OCTAVE_DIVISIONS, ORIENTATIONS } from '../../services/constants'
 
 export const propTypes = {
   /**
@@ -22,7 +21,10 @@ export const propTypes = {
    */
   endKey: PropTypes.number.isRequired,
 
-  //octaveDivision: PropTypes.number,
+  /**
+   * Equal parts of an octave.
+   */
+  octaveDivision: PropTypes.oneOf(OCTAVE_DIVISIONS),
 
   /**
    * Ratio of the length of the accidental keys to the natural keys.
@@ -67,7 +69,7 @@ export const propTypes = {
   /**
    * Behavior of the component when clicking.
    */
-  behavior: PropTypes.oneOf(BEHAVIOR),
+  behavior: PropTypes.oneOf(BEHAVIORS),
   /**
    * Name of the component used for forms.
    */
@@ -87,31 +89,25 @@ export const propTypes = {
    * Received velocity when activating the component through the keyboard.
    */
   keyboardVelocity: PropTypes.number,
+  /**
+   * Orientation of the component.
+   */
+  orientation: PropTypes.oneOf(ORIENTATIONS),
+  /**
+   * Is the component mirrored?
+   */
+  mirrored: PropTypes.bool,
 }
 
 type Props = PropTypes.InferProps<typeof propTypes>
 
 /**
  * Component for displaying musical notes in the form of a piano keyboard.
- * @param startKey - MIDI note of the first key.
- * @param endKey - MIDI note of the last key.
- * @param accidentalKeyLengthRatio - Ratio of the length of the accidental keys to the natural keys.
- * @param keyChannels - Current active keys and their channel assignments.
- * @param width - Width of the component.
- * @param keyComponents - Components to use for each kind of key.
- * @param height - Height of the component.
- * @param name - Name of the component used for forms.
- * @param href - Destination of the component upon clicking a key, if behavior is set to 'link'.
- * @param behavior - Behavior of the component when clicking.
- * @param onChange - Event handler triggered upon change in activated keys in the component.
- * @param keyboardMapping - Map from key code to key number, used to activate the component from the keyboard.
- * @param midiInput - Can MIDI input messages activate the component?
- * @param keyboardVelocity - Received velocity when activating the component through the keyboard.
  */
 const Keyboard: React.FC<Props> = ({
   startKey,
   endKey,
-  //octaveDivision = 12,
+  octaveDivision = 12,
   accidentalKeyLengthRatio = 0.65,
   keyChannels = [],
   width = '100%',
@@ -124,6 +120,8 @@ const Keyboard: React.FC<Props> = ({
   href,
   midiInput,
   keyboardVelocity,
+  orientation = 0,
+  mirrored = false,
 }) => {
   const [clientSide, setClientSide] = React.useState(false)
   const [clientSideKeys, setClientSideKeys] = React.useState<number[]>([])
@@ -144,6 +142,30 @@ const Keyboard: React.FC<Props> = ({
   }, [startKey, endKey])
 
   const keys = clientSide ? clientSideKeys : generateKeys(startKey, endKey)
+  const widthDimension = orientation === 90 || orientation === 270 ? 'height' : 'width'
+  const heightDimension = orientation === 90 || orientation === 270 ? 'width' : 'height'
+  let leftDirection: string
+  let topDirection: string
+
+  switch (orientation) {
+    default:
+    case 0:
+      leftDirection = 'left'
+      topDirection = 'top'
+      break
+    case 90:
+      leftDirection = 'bottom'
+      topDirection = 'left'
+      break
+    case 180:
+      leftDirection = 'right'
+      topDirection = 'bottom'
+      break
+    case 270:
+      leftDirection = 'top'
+      topDirection = 'right'
+      break
+  }
 
   return (
     <React.Fragment>
@@ -176,7 +198,8 @@ const Keyboard: React.FC<Props> = ({
             getKeyWidth,
           )(key, left, width)
           const octaveStart = Math.floor(key / 12) * 12
-          const octaveEnd = octaveStart + 11
+          const theOctaveDivision = (octaveDivision as number) !== 12 ? 12 : octaveDivision
+          const octaveEnd = octaveStart + 12 * (1 - 1 / theOctaveDivision!)
           const octaveLeftBounds = getKeyLeft(octaveStart)
           const octaveRightBounds = getKeyLeft(octaveEnd) + getKeyWidth(octaveEnd)
           const components: Record<string, string> = {
@@ -202,11 +225,11 @@ const Keyboard: React.FC<Props> = ({
               data-right-full-bounds={isNatural ? left + width : undefined}
               style={{
                 zIndex: isNatural ? 0 : 2,
-                width: width + '%',
-                height: (isNatural ? 100 : 100 * accidentalKeyLengthRatio!) + '%',
-                left: left + '%',
+                [widthDimension]: width + '%',
+                [heightDimension]: (isNatural ? 100 : 100 * accidentalKeyLengthRatio!) + '%',
+                [leftDirection]: (mirrored ? 100 - width - left : left) + '%',
                 position: 'absolute',
-                top: 0,
+                [topDirection]: 0,
                 cursor: onChange || behavior ? 'pointer' : undefined,
                 color: 'inherit',
                 '--opacity-highlight': currentKey !== null ? 1 : 0,
@@ -238,6 +261,8 @@ const Keyboard: React.FC<Props> = ({
             keyboardMapping={keyboardMapping}
             midiInput={midiInput}
             keyboardVelocity={keyboardVelocity}
+            orientation={orientation}
+            mirrored={mirrored}
           />
         )}
       </div>

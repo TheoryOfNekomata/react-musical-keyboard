@@ -137,6 +137,8 @@ export default NaturalKey
 
 Take note that pressed keys from multiple channels might overlap, therefore it is advisable to support multiple channels pressing a single key at once.
 
+The component also supports orientation and mirroring, for instance, in use with horizontally-spanning piano rolls. Specify using the `orientation` and `mirroring` props.
+
 ## License
 
 MIT. See [License file](./LICENSE) for details.

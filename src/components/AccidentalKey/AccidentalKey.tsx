@@ -1,6 +1,20 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import {
+  BOTTOM_CSS_ATTRIBUTES,
+  LEFT_CSS_ATTRIBUTES,
+  WIDTH_CSS_ATTRIBUTES,
+  ORIENTATIONS,
+} from '../../services/constants'
 
-const AccidentalKey: React.FC = () => (
+const propTypes = {
+  label: PropTypes.string,
+  orientation: PropTypes.oneOf(ORIENTATIONS),
+}
+
+type Props = PropTypes.InferProps<typeof propTypes>
+
+const AccidentalKey: React.FC<Props> = ({ label = '', orientation = 0 }) => (
   <div
     style={{
       width: '100%',
@@ -22,6 +36,19 @@ const AccidentalKey: React.FC = () => (
         backgroundColor: `var(--color-active-key, Highlight)`,
       }}
     />
+    <div
+      style={{
+        position: 'absolute',
+        display: 'grid',
+        placeContent: 'center',
+        filter: 'invert(100)',
+        [BOTTOM_CSS_ATTRIBUTES[orientation || 0]]: 0,
+        [LEFT_CSS_ATTRIBUTES[orientation || 0]]: 0,
+        [WIDTH_CSS_ATTRIBUTES[orientation || 0]]: '100%',
+      }}
+    >
+      {label}
+    </div>
   </div>
 )
 

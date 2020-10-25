@@ -1,8 +1,7 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import StyledAccidentalKey from '../StyledAccidentalKey/StyledAccidentalKey'
 import StyledNaturalKey from '../StyledNaturalKey/StyledNaturalKey'
-import Keyboard, { propTypes } from './Keyboard'
+import Keyboard, { Props } from './Keyboard'
 
 const Wrapper: React.FC = (props) => (
   <div
@@ -33,8 +32,6 @@ export default {
   title: 'Keyboard',
 }
 
-type Props = PropTypes.InferProps<typeof propTypes>
-
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
 export const Default = (props?: Partial<Props>) => (
@@ -49,13 +46,13 @@ export const WithActiveKeys = (props?: Partial<Props>) => (
       {...props}
       startKey={21}
       endKey={108}
-      keyChannels={[
+      keysOn={[
         {
           key: 60,
           velocity: 1,
         },
         {
-          key: 64,
+          key: 63,
           velocity: 1,
         },
         {
@@ -86,7 +83,7 @@ export const Styled = (props?: Partial<Props>) => (
         {...props}
         startKey={21}
         endKey={108}
-        keyChannels={[
+        keysOn={[
           {
             key: 60,
             velocity: 1,
@@ -123,7 +120,7 @@ export const AnotherStyled = (props?: Partial<Props>) => (
         {...props}
         startKey={21}
         endKey={108}
-        keyChannels={[
+        keysOn={[
           {
             key: 60,
             velocity: 1,
@@ -161,7 +158,7 @@ export const DarkStyled = (props?: Partial<Props>) => (
         {...props}
         startKey={21}
         endKey={108}
-        keyChannels={[
+        keysOn={[
           {
             key: 60,
             velocity: 1,
@@ -226,7 +223,7 @@ const HasMapComponent = (props: any) => {
         {...props}
         startKey={21}
         endKey={108}
-        keyChannels={keyChannels}
+        keysOn={keyChannels}
         onChange={handleKeyOn}
         keyboardMapping={{
           KeyQ: 60,
@@ -279,19 +276,19 @@ export const Mirrored = () => <HasMapComponent mirrored />
 
 export const Checkbox = (props?: Partial<Props>) => (
   <Wrapper>
-    <Keyboard {...props} startKey={21} endKey={108} behavior="checkbox" name="checkbox" />
+    <Keyboard {...props} startKey={21} endKey={108} fallbackBehavior="checkbox" name="checkbox" />
   </Wrapper>
 )
 
 export const Radio = (props?: Partial<Props>) => (
   <Wrapper>
-    <Keyboard {...props} startKey={21} endKey={108} behavior="radio" name="radio" />
+    <Keyboard {...props} startKey={21} endKey={108} fallbackBehavior="radio" name="radio" />
   </Wrapper>
 )
 
 export const Link = (props?: Partial<Props>) => (
   <Wrapper>
-    <Keyboard {...props} startKey={21} endKey={108} behavior="link" href={(key) => `?key=${key}`} />
+    <Keyboard {...props} startKey={21} endKey={108} fallbackBehavior="link" href={(key) => `?key=${key}`} />
   </Wrapper>
 )
 
@@ -313,4 +310,74 @@ export const Rotated180Mirrored = (props?: Partial<Props>) => <HasMapComponent {
 
 export const Rotated270Mirrored = (props?: Partial<Props>) => (
   <HasMapComponent {...props} orientation={270} width={80} height={600} mirrored />
+)
+
+export const LabelledKeyboard = (props?: Partial<Props>) => (
+  <HasMapComponent {...props} startKey={21} endKey={108} keyLabels={(key: number) => key} />
+)
+
+export const LabelledOctave = (props?: Partial<Props>) => (
+  <HasMapComponent
+    {...props}
+    startKey={21}
+    endKey={108}
+    keyLabels={(key: number) => {
+      if (Math.floor(key / 12) === 5) {
+        return key.toString()
+      }
+      return ''
+    }}
+  />
+)
+
+export const LabelledPitch = (props?: Partial<Props>) => (
+  <HasMapComponent
+    {...props}
+    startKey={21}
+    endKey={108}
+    keyLabels={(key: number) => {
+      if (key % 12 === 0) {
+        return 'C'
+      }
+      return ''
+    }}
+  />
+)
+
+export const LabelledRotatedKeyboard = (props?: Partial<Props>) => (
+  <HasMapComponent
+    {...props}
+    orientation={90}
+    width={80}
+    height={600}
+    startKey={21}
+    endKey={108}
+    keyLabels={(key: number) => key}
+  />
+)
+
+export const LabelledRotatedMirroredKeyboard = (props?: Partial<Props>) => (
+  <HasMapComponent
+    {...props}
+    orientation={90}
+    width={80}
+    height={600}
+    startKey={21}
+    endKey={108}
+    mirrored
+    keyLabels={(key: number) => key}
+  />
+)
+
+export const LabelledStyledKeyboard = (props?: Partial<Props>) => (
+  <HasMapComponent
+    {...props}
+    startKey={21}
+    endKey={108}
+    keyComponents={{
+      natural: StyledNaturalKey,
+      accidental: StyledAccidentalKey,
+    }}
+    keyLabels={(key: number) => key}
+  />
 )

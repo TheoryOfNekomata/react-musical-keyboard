@@ -8,9 +8,9 @@ import DefaultAccidentalKey from '../AccidentalKey/AccidentalKey'
 import DefaultNaturalKey from '../NaturalKey/NaturalKey'
 import KeyboardMap from '../KeyboardMap/KeyboardMap'
 import getKeyBounds from '../../services/getKeyBounds'
-import { BEHAVIORS, OCTAVE_DIVISIONS, ORIENTATIONS } from '../../services/constants'
+import { BEHAVIORS, OCTAVE_DIVISIONS, ORIENTATIONS, COMPONENTS } from '../../services/constants'
 
-export const propTypes = {
+const propTypes = {
   /**
    * MIDI note of the first key.
    */
@@ -34,7 +34,7 @@ export const propTypes = {
   /**
    * Current active keys and their channel assignments.
    */
-  keyChannels: PropTypes.arrayOf(
+  keysOn: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.number.isRequired,
       velocity: PropTypes.number.isRequired,
@@ -58,26 +58,32 @@ export const propTypes = {
    * Height of the component.
    */
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
   /**
    * Event handler triggered upon change in activated keys in the component.
    */
   onChange: PropTypes.func,
+
   /**
    * Map from key code to key number, used to activate the component from the keyboard.
    */
   keyboardMapping: PropTypes.object,
+
   /**
    * Behavior of the component when clicking.
    */
-  behavior: PropTypes.oneOf(BEHAVIORS),
+  fallbackBehavior: PropTypes.oneOf(BEHAVIORS),
+
   /**
    * Name of the component used for forms.
    */
   name: PropTypes.string,
+
   /**
-   * Destination of the component upon clicking a key, if behavior is set to 'link'.
+   * Destination of the component upon clicking a key, if fallbackBehavior is set to 'link'.
    */
   href: PropTypes.func,
+
   /**
    * MIDI input for sending MIDI messages to the component.
    */
@@ -85,21 +91,29 @@ export const propTypes = {
     addEventListener: PropTypes.func.isRequired,
     removeEventListener: PropTypes.func.isRequired,
   }),
+
   /**
    * Received velocity when activating the component through the keyboard.
    */
   keyboardVelocity: PropTypes.number,
+
   /**
    * Orientation of the component.
    */
   orientation: PropTypes.oneOf(ORIENTATIONS),
+
   /**
    * Is the component mirrored?
    */
   mirrored: PropTypes.bool,
+
+  /**
+   * Function returning the label of each key.
+   */
+  keyLabels: PropTypes.func,
 }
 
-type Props = PropTypes.InferProps<typeof propTypes>
+export type Props = PropTypes.InferProps<typeof propTypes>
 
 /**
  * Component for displaying musical notes in the form of a piano keyboard.
@@ -109,19 +123,20 @@ const Keyboard: React.FC<Props> = ({
   endKey,
   octaveDivision = 12,
   accidentalKeyLengthRatio = 0.65,
-  keyChannels = [],
+  keysOn = [],
   width = '100%',
   keyComponents = {},
   height = 80,
   onChange,
   keyboardMapping,
-  behavior,
+  fallbackBehavior,
   name,
   href,
   midiInput,
   keyboardVelocity,
   orientation = 0,
   mirrored = false,
+  keyLabels,
 }) => {
   const [clientSide, setClientSide] = React.useState(false)
   const [clientSideKeys, setClientSideKeys] = React.useState<number[]>([])
@@ -188,7 +203,7 @@ const Keyboard: React.FC<Props> = ({
         {keys.map((key) => {
           const isNatural = isNaturalKey(key)
           const Component: any = isNatural ? NaturalKey! : AccidentalKey!
-          const [currentKey = null] = Array.isArray(keyChannels!) ? keyChannels.filter((kc) => kc!.key === key) : []
+          const [currentKey = null] = Array.isArray(keysOn!) ? keysOn.filter((kc) => kc!.key === key) : []
           const width = getKeyWidth(key)
           const left = getKeyLeft(key)
           const { left: leftBounds, right: rightBounds } = getKeyBounds(
@@ -198,24 +213,20 @@ const Keyboard: React.FC<Props> = ({
             getKeyWidth,
           )(key, left, width)
           const octaveStart = Math.floor(key / 12) * 12
+          // TODO implement xenharmonic keyboards
           const theOctaveDivision = (octaveDivision as number) !== 12 ? 12 : octaveDivision
           const octaveEnd = octaveStart + 12 * (1 - 1 / theOctaveDivision!)
           const octaveLeftBounds = getKeyLeft(octaveStart)
           const octaveRightBounds = getKeyLeft(octaveEnd) + getKeyWidth(octaveEnd)
-          const components: Record<string, string> = {
-            link: 'a',
-            checkbox: 'label',
-            radio: 'label',
-          }
 
-          const { [behavior!]: component = 'div' } = components
+          const { [fallbackBehavior!]: component = 'div' } = COMPONENTS
 
           const KeyComponent = component as React.ElementType
 
           return (
             <KeyComponent
               key={key}
-              href={behavior === 'link' ? href!(key) : undefined}
+              href={fallbackBehavior === 'link' ? href!(key) : undefined}
               data-key={key}
               data-octave-left-bounds={octaveLeftBounds}
               data-octave-right-bounds={octaveRightBounds}
@@ -230,14 +241,14 @@ const Keyboard: React.FC<Props> = ({
                 [leftDirection]: (mirrored ? 100 - width - left : left) + '%',
                 position: 'absolute',
                 [topDirection]: 0,
-                cursor: onChange || behavior ? 'pointer' : undefined,
+                cursor: onChange || fallbackBehavior ? 'pointer' : undefined,
                 color: 'inherit',
                 '--opacity-highlight': currentKey !== null ? 1 : 0,
               }}
             >
-              {(behavior! === 'checkbox' || behavior === 'radio') && (
+              {(fallbackBehavior! === 'checkbox' || fallbackBehavior === 'radio') && (
                 <input
-                  type={behavior}
+                  type={fallbackBehavior}
                   className="ReactMusicalKeyboard-checkbox"
                   name={name!}
                   value={key}
@@ -250,7 +261,11 @@ const Keyboard: React.FC<Props> = ({
                   }}
                 />
               )}
-              <Component />
+              <Component
+                label={typeof keyLabels! === 'function' ? keyLabels(key) : null}
+                orientation={orientation}
+                mirrored={mirrored}
+              />
             </KeyComponent>
           )
         })}

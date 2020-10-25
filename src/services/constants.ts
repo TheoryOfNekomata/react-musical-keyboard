@@ -93,3 +93,30 @@ export const BEHAVIORS = ['link', 'checkbox', 'radio'] as const
 export const OCTAVE_DIVISIONS = [12, 17, 19, 21, 24, 36] as const
 
 export const ORIENTATIONS = [0, 90, 180, 270] as const
+
+export const BOTTOM_CSS_ATTRIBUTES: Record<0 | 90 | 180 | 270, string> = {
+  0: 'bottom',
+  90: 'right',
+  180: 'top',
+  270: 'left',
+}
+
+export const LEFT_CSS_ATTRIBUTES: Record<0 | 90 | 180 | 270, string> = {
+  0: 'left',
+  90: 'bottom',
+  180: 'right',
+  270: 'top',
+}
+
+export const WIDTH_CSS_ATTRIBUTES: Record<0 | 90 | 180 | 270, string> = {
+  0: 'width',
+  180: 'width',
+  90: 'height',
+  270: 'height',
+}
+
+export const COMPONENTS: Record<string, string> = {
+  link: 'a',
+  checkbox: 'label',
+  radio: 'label',
+}

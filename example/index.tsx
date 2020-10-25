@@ -117,7 +117,7 @@ const App = () => {
           <Keyboard
             startKey={0}
             endKey={127}
-            keyChannels={keyChannels}
+            keysOn={keyChannels}
             height="100%"
             keyboardVelocity={0.75}
             onChange={Channel.handle({ setKeyChannels, generator: generator.current!, channel, })}
